@@ -33,7 +33,7 @@ def signup(request):
         form = UserCreationForm()
     return render(request, 'users/signup.html', {'form': form})
 
-def connexion(request):
+def signin(request):
     error = False
 
     if request.method == "POST":
