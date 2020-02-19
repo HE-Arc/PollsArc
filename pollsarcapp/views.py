@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
+from .forms import ConnexionForm
 
 # Create your views here.
 def home(request):
@@ -49,6 +50,6 @@ def signin(request):
     else:
         form = ConnexionForm()
 
-    return render(request, 'users/connexion.html', locals())
+    return render(request, 'users/signin.html', locals())
 
 
