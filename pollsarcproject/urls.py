@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from pollsarcapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.home),
+    path('createPoll', views.createPoll),
+    path('searchUsers/<str:name>', views.searchUsers)
 ]
