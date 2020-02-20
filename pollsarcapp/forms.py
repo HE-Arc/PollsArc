@@ -2,8 +2,6 @@ from django import forms
 
 class PollFormValidation(forms.Form):
     is_private = forms.BooleanField()
-    #users = forms.MultipleChoiceField()
-    poll_name = forms.CharField()
-    poll_description = forms.CharField()
-    expiration_date = forms.DateField()
-    #propositions = forms.MultipleChoiceField()
+    poll_name = forms.CharField(required=True, max_length=100)
+    poll_description = forms.CharField(required=True, max_length=255)
+    expiration_date = forms.DateField(required=True)
