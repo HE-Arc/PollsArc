@@ -20,6 +20,7 @@ from pollsarcapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home),
+    path('createPollForm', views.createPollForm),
     path('createPoll', views.createPoll),
     path('searchUsers/<str:name>', views.searchUsers)
 ]

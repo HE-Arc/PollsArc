@@ -1,7 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
+
+
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
     <h1>Create a poll</h1>
-    <form>
+    <form method="POST" id="poll_form" action="createPoll">
+        {% csrf_token %}
         <div class="form-check form-check-inline">
             <input name="is_private" type="checkbox" id="is_private" class="form-check-input"/>
             <label for="is_private" class="form-check-label">Private form</label>
@@ -10,10 +28,15 @@
         <div class="form-group">
             <label for="search_user">Invite user in the poll : </label>
             <input type="search" class="form-control" name="search_user" placeholder="Type user name here ! " id="search_user">
-            <!--<button type="button" class="btn btn-primary" id="add_user" disabled>Add user</button>-->
-
+            <!--<div class="input-group mb-3">
+                <input type="search" class="form-control" name="search_user" placeholder="Type user name here ! " id="search_user">
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-primary" id="add_user" disabled>Add user</button>
+              </div>
+            </div>-->
         </div>
-        <div id="selected_user"></div>
+        <input type="hidden" id="selected_user" name="selected_user">
+        <div id="selected_user_display"></div>
         <div class="form-group">
             <label for="poll_name">Poll's name : </label>
             <input class="form-control" type="text" name="poll_name" id="poll_name"/>
@@ -28,8 +51,15 @@
         </div>
         <div class="form-group">
             <label for="add_proposition"></label>
-            <input type="text" class="form-control" id="add_proposition"/><button type="button" class="btn btn-success" id="add_proposition_button">Add proposition</button><br>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="add_proposition"/>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-success" id="add_proposition_button">Add proposition</button>
+              </div>
+            </div>
         </div>
+        <input type="hidden" id="proposed_prop" name="proposed_prop">
+        <div id="proposed_prop_display"></div>
         <input type="submit" class="btn btn-dark" value="Submit poll">
     </form>
 {% endblock %}
