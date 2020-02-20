@@ -11,10 +11,8 @@ def createPoll(request):
     return render(request, 'createPoll.html')
 
 def searchUsers(request, name):
-    users = User.objects.filter(username__contains=name).exclude(is_superuser=False)
+    users = User.objects.filter(username__contains=name)#.exclude(is_superuser=False)
     list_users = []
     for user in users:
-        list_users.append((user.id, user.username))
+        list_users.append({'id' : user.id, 'pseudo' : user.username})
     return JsonResponse({'users' : list_users})
-
-
