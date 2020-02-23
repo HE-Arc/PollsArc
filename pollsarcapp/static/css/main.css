@@ -2,3 +2,13 @@
     border: solid 1px black;
     padding: 3px;
 }
+
+.proposed_poll_display {
+    border: solid 1px black;
+    padding: 3px;
+    background-color: rgb(167, 167, 167);
+}
+
+.proposed_poll_display:hover{
+    background-color: white;
+}

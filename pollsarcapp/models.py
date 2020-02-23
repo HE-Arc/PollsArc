@@ -8,6 +8,7 @@ class Poll(models.Model):
     is_private = models.BooleanField(default=True)
     description = models.CharField(max_length=255)
     expiration_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "Poll -> " + self.name

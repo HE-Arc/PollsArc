@@ -1,22 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-
-
-{% if form.errors %}
-    {% for field in form %}
-        {% for error in field.errors %}
-            <div class="alert alert-danger">
-                <strong>{{ error|escape }}</strong>
-            </div>
-        {% endfor %}
-    {% endfor %}
-    {% for error in form.non_field_errors %}
-        <div class="alert alert-danger">
-            <strong>{{ error|escape }}</strong>
-        </div>
-    {% endfor %}
-{% endif %}
-
     <h1>Create a poll</h1>
     <form method="POST" id="poll_form" action="createPoll" autocomplete="off">
         {% csrf_token %}

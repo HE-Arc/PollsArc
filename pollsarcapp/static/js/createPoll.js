@@ -1,30 +1,34 @@
 let added_users = []
 
-document.getElementById("search_user").addEventListener("input", (e) => {
-    fetch('searchUsers/' + encodeURI(e.data)).then((response) => {
-        response.json().then((data) => {
-            user_to_display = [];
-            for(let i = 0; i < data.users.length; i++){
-                user_to_display.push(data.users[i].pseudo)
-            }
+let search_user_input = document.getElementById("search_user")
 
-            $("#search_user").autocomplete({
-                source: data.users,
-                select: function(e, ui){
-
-                    let added_user = ui.item.label
-                        if(!user_already_selected(added_users, added_user)){
-                            added_users.push([ui.item.id, added_user])
-                            
-                            document.getElementById("selected_user_display").innerHTML += "<div class='user' id=user_"+ ui.item.id +">"+ added_user +'<button type="button" class="close" onclick="removeUser(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
+if(search_user_input){
+    search_user_input.addEventListener("input", (e) => {
+        fetch('searchUsers/' + encodeURI(e.data)).then((response) => {
+            response.json().then((data) => {
+                user_to_display = [];
+                for(let i = 0; i < data.users.length; i++){
+                    user_to_display.push(data.users[i].pseudo)
+                }
     
-                            document.getElementById("selected_user").value = JSON.stringify(added_users.map((v,i) => {return v[0]}))
-                        }                    
-                    }
+                $("#search_user").autocomplete({
+                    source: data.users,
+                    select: function(e, ui){
+    
+                        let added_user = ui.item.label
+                            if(!user_already_selected(added_users, added_user)){
+                                added_users.push([ui.item.id, added_user])
+                                
+                                document.getElementById("selected_user_display").innerHTML += "<div class='user' id=user_"+ ui.item.id +">"+ added_user +'<button type="button" class="close" onclick="removeUser(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
+        
+                                document.getElementById("selected_user").value = JSON.stringify(added_users.map((v,i) => {return v[0]}))
+                            }                    
+                        }
+                    })
                 })
             })
-        })
-})
+    })
+}
 
 function user_already_selected(users_array, user){
     return users_array.map((v,i) => {return v[1]}).includes(user)
@@ -46,20 +50,26 @@ function removeUser(element){
 let nb_prop = 0
 let proposed_props = []
 
-document.getElementById("add_proposition_button").addEventListener("click", (e) => {
-    let prop_input = document.getElementById("add_proposition")
-    let prop = prop_input.value
+let prop_input = document.getElementById("add_proposition_button")
 
-    prop_input.value = ""
-    prop_input.focus()
+if(prop_input){
+    prop_input.addEventListener("click", (e) => {
+        let prop_input = document.getElementById("add_proposition")
+        let prop = prop_input.value
+    
+        prop_input.value = ""
+        prop_input.focus()
+    
+        nb_prop++
+        proposed_props.push(prop)
+    
+        //document.getElementById("proposed_prop_display").innerHTML += "<span><strong>"+ nb_prop + ")</strong> "+ prop +"</span>"
+        document.getElementById("proposed_prop_display").innerHTML += "<div id='prop_'" + nb_prop + "><strong>"+ nb_prop + ")</strong> "+ prop +'<button type="button" class="close" onclick="removeProp(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
+        document.getElementById("proposed_prop").value = JSON.stringify(proposed_props)
+    })
+}
 
-    nb_prop++
-    proposed_props.push(prop)
 
-    //document.getElementById("proposed_prop_display").innerHTML += "<span><strong>"+ nb_prop + ")</strong> "+ prop +"</span>"
-    document.getElementById("proposed_prop_display").innerHTML += "<div id='prop_'" + nb_prop + "><strong>"+ nb_prop + ")</strong> "+ prop +'<button type="button" class="close" onclick="removeProp(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-    document.getElementById("proposed_prop").value = JSON.stringify(proposed_props)
-})
 
 function removeProp(element){
     let parent = element.parentNode

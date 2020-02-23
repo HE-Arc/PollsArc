@@ -22,5 +22,6 @@ urlpatterns = [
     path('', views.home),
     path('createPollForm', views.createPollForm),
     path('createPoll', views.createPoll),
-    path('searchUsers/<str:name>', views.searchUsers)
+    path('searchUsers/<str:name>', views.searchUsers),
+    path('searchPolls/<str:name>', views.searchPolls)
 ]

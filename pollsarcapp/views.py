@@ -9,7 +9,8 @@ import html
 
 # Create your views here.
 def home(request):
-    return render(request, 'home.html')
+    polls = Poll.objects.order_by('created_at').reverse()[:5]
+    return render(request, 'home.html', {'latest_polls' : polls})
 
 def createPollForm(request):
     return render(request, 'createPoll.html')
@@ -20,6 +21,13 @@ def searchUsers(request, name):
     for user in users:
         list_users.append({'id' : user.id, 'label' : user.username})
     return JsonResponse({'users' : list_users})
+
+def searchPolls(request, name):
+    polls = list(Poll.objects.filter(name__contains=name))
+    list_polls = []
+    for poll in polls:
+        list_polls.append({'id' : poll.id, 'name' : poll.name, 'description' : poll.description})
+    return JsonResponse({'polls' : list_polls})
 
 def createPoll(request):
     poll_form = PollFormValidation(request.POST or None)
