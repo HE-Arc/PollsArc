@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Name : {{ poll.name }}</h1>
+    <p>Description : {{ poll.description }}</p>
+    <p>Owner : {{ poll.owner }}</p>
+    <p>Expiration date : {{ poll.expiration_date}}
+
+    <h2>Propositions : </h2>
+    {% for prop in propositions %}
+        <p><strong>{{ prop.label }}</strong><button type="button" class="btn btn-success">Vote ! </button></p>
+    {% endfor %}
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from .forms import PollFormValidation
@@ -11,6 +11,14 @@ import html
 def home(request):
     polls = Poll.objects.order_by('created_at').reverse()[:5]
     return render(request, 'home.html', {'latest_polls' : polls})
+
+def showPoll(request, id):
+    try:
+        poll = Poll.objects.get(pk=id)
+        propositions = Proposition.objects.filter(poll=poll)
+        return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions})
+    except Poll.DoesNotExist:
+        return Http404
 
 def createPollForm(request):
     return render(request, 'createPoll.html')

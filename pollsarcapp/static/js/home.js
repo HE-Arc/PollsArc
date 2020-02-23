@@ -8,6 +8,8 @@ if(search_poll_input){
             proposed_polls_input.innerHTML = ""
             response.json().then((data) => {
                 data.polls.forEach(element => {
+                    console.log(element.id);
+                    
                     proposed_polls_input.innerHTML += "<div class='proposed_poll_display'><strong>Name : "+ element.name +"</strong><br> descrption : "+ element.description +"</div>"
               });
             })
