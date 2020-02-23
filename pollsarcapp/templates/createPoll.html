@@ -18,7 +18,7 @@
 {% endif %}
 
     <h1>Create a poll</h1>
-    <form method="POST" id="poll_form" action="createPoll">
+    <form method="POST" id="poll_form" action="createPoll" autocomplete="off">
         {% csrf_token %}
         <div class="form-check form-check-inline">
             <input name="is_private" type="checkbox" id="is_private" class="form-check-input"/>
