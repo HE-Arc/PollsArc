@@ -16,7 +16,7 @@ document.getElementById("search_user").addEventListener("input", (e) => {
                         if(!user_already_selected(added_users, added_user)){
                             added_users.push([ui.item.id, added_user])
                             
-                            document.getElementById("selected_user_display").innerHTML += "<p>"+ added_user +"</p>"
+                            document.getElementById("selected_user_display").innerHTML += "<div class='user' id="+ ui.item.id +">"+ added_user +'<button type="button" class="close" onclick="removeUser(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
     
                             document.getElementById("selected_user").value = JSON.stringify(added_users.map((v,i) => {return v[0]}))
                         }                    
@@ -42,6 +42,19 @@ document.getElementById("add_proposition_button").addEventListener("click", (e) 
 
     document.getElementById("proposed_prop").value = JSON.stringify(proposed_props)
 })
+
+function removeUser(element){
+    let parent = element.parentNode
+
+    let index_to_remove = 0;
+    added_users.forEach( (elem, index) =>{
+        if(elem == parent.id){
+            index_to_remove = index
+        }
+    })
+    added_users.splice(index_to_remove,1)
+    parent.remove()
+}
 
 // Allow to don't send the search field on the server
 $("#poll_form").submit(() => {
