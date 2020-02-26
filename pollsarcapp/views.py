@@ -2,11 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
-from .forms import ConnexionForm
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
 def home(request):
     return render(request, 'home.html')
 
@@ -20,36 +19,18 @@ def searchUsers(request, name):
         list_users.append((user.id, user.username))
     return JsonResponse({'users' : list_users})
 
-def signup(request):
+def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
+            user=authenticate(username=username, password=raw_password)
             login(request, user)
             return redirect('home')
     else:
         form = UserCreationForm()
-    return render(request, 'users/signup.html', {'form': form})
-
-def signin(request):
-    error = False
-
-    if request.method == "POST":
-        form = ConnexionForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data["username"]
-            password = form.cleaned_data["password"]
-            user = authenticate(username=username, password=password)
-            if user: 
-                login(request, user)
-            else: 
-                error = True
-    else:
-        form = ConnexionForm()
-
-    return render(request, 'users/signin.html', locals())
+    return render(request, 'registration/register.html', {'form': form})
 
 

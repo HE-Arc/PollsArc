@@ -16,12 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from pollsarcapp import views
+from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('createPoll', views.createPoll),
     path('searchUsers/<str:name>', views.searchUsers),
-    path('signup', views.signup, name='signup'),
-    path('signin', views.signin, name='signin')
+    path('register', views.register, name='register'),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
