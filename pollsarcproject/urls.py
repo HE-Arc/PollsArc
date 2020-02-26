@@ -24,6 +24,6 @@ urlpatterns = [
     path('createPoll', views.createPoll),
     path('poll/<int:id>', views.showPoll),
     path('searchUsers/<str:name>', views.searchUsers),
-    path('searchPolls/<str:name>', views.searchPolls)
+    path('searchPolls/<str:name>', views.searchPolls),
     path('signup', views.signup, name='signup')
 ]
