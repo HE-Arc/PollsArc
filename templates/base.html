@@ -25,6 +25,15 @@
           <a class="nav-item nav-link" href="#">Profile</a>
         </div>
       </div>
+      {% if request.user.is_authenticated %}
+          {{ request.user }} | <a href="#" onClick="document.getElementById('logoutform').submit()"><button type="button">Logout</button></a>
+              <form id="logoutform" method="POST" action="{% url 'logout' %}">
+          {% csrf_token %}
+              <input type="hidden">
+              </form>
+          {% else %}
+              <a href="{% url 'register' %}">Sign up</a> | <a href="{% url 'login' %}">Sign in</a>
+      {% endif %}
     </nav>
     <div class="container">
       {% block content %}
