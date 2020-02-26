@@ -20,9 +20,12 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
+    path('', views.home),
+    path('createPollForm', views.createPollForm),
     path('createPoll', views.createPoll),
+    path('poll/<int:id>', views.showPoll),
     path('searchUsers/<str:name>', views.searchUsers),
     path('register', views.register, name='register'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('searchPolls/<str:name>', views.searchPolls),
 ]
