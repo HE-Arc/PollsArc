@@ -8,6 +8,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 import json
 import html
+from django.core.mail import send_mass_mail
 
 def home(request):
     polls = Poll.objects.order_by('created_at').reverse()[:5]
@@ -62,11 +63,17 @@ def createPoll(request):
 def addUsersToPoll(id_users, poll):
     try:
         users = []
+        mails = ()
+
         for id in id_users:
             users.append(User.objects.get(id=id))
 
         for user in users:
             PollUser(poll=poll, user=user).save()
+            mail = ('Added to a poll', 'You has been added to a poll', 'noreply@pollsarc', [user.email])
+            mails = (mail,) + mails
+        
+        send_mass_mail(mails)
 
         return True
     except User.DoesNotExist:
