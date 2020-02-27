@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib import auth
 
 # Create your models here.
 class Poll(models.Model):
@@ -49,3 +50,18 @@ class PropositionUser(models.Model):
     class Meta:
         verbose_name = "PropositionUser"
         verbose_name_plural = "PropositionUser"
+
+def hasAlreadyAnswered(self, poll_id):
+    user_has_already_answered = False
+    try: 
+        answered_polls = list(PropositionUser.objects.filter(user=self))
+
+        for answered_poll in answered_polls:
+            if(answered_poll.proposition.poll.id == poll_id):
+                user_has_already_answered = True
+    except PropositionUser.DoesNotExist:
+        user_has_already_answered = False
+
+    return user_has_already_answered
+
+User.add_to_class("hasAlreadyAnswered",hasAlreadyAnswered)
