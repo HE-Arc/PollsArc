@@ -23,7 +23,7 @@ urlpatterns = [
     path('', views.home, name="home"),
     path('createPollForm', views.createPollForm),
     path('createPoll', views.createPoll),
-    path('poll/<int:id>', views.showPoll),
+    path('poll/<int:id>', views.showPoll, name="poll"),
     path('searchUsers/<str:name>', views.searchUsers),
     path('register', views.register, name='register'),
     path('accounts/', include('django.contrib.auth.urls')),

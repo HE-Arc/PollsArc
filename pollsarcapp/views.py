@@ -9,6 +9,8 @@ from django.contrib.auth.forms import UserCreationForm
 import json
 import html
 from django.core.mail import send_mass_mail
+from django.urls import reverse
+from django.contrib.sites.shortcuts import get_current_site
 
 def home(request):
     polls = Poll.objects.order_by('created_at').reverse()[:5]
@@ -55,12 +57,12 @@ def createPoll(request):
         poll.save()
 
         createPropositions(propositions, poll)
-        if addUsersToPoll(id_users, poll):
+        if addUsersToPoll(request, id_users, poll):
             return redirect('/')
 
     return render(request, 'createPoll.html')
 
-def addUsersToPoll(id_users, poll):
+def addUsersToPoll(request, id_users, poll):
     try:
         users = []
         mails = ()
@@ -70,7 +72,9 @@ def addUsersToPoll(id_users, poll):
 
         for user in users:
             PollUser(poll=poll, user=user).save()
-            mail = ('Added to a poll', 'You has been added to a poll', 'noreply@pollsarc', [user.email])
+            link = ''.join([get_current_site(request).domain, reverse('poll', args=[poll.id])])
+            message = 'You has been added to the poll :  {}. You can access the poll using this link : {}'.format(poll.name, link)
+            mail = ('Added to a poll', message, 'noreply@pollsarc', [user.email])
             mails = (mail,) + mails
         
         send_mass_mail(mails)
