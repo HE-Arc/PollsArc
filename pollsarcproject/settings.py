@@ -129,3 +129,11 @@ STATICFILES_DIRS = (
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'
+
+# display email in the console instead send email
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = 'ef58f90fb2147b'
+EMAIL_HOST_PASSWORD = '6483de66df1770'
+EMAIL_PORT = '2525'
