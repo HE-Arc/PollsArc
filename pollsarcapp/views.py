@@ -100,3 +100,7 @@ def register(request):
 def createPropositions(props, poll):
     for prop in props:
         Proposition(label=html.escape(prop), poll=poll).save()
+
+def user_profile(request, username):
+    user = User.objects.get(username=username)
+    return render(request, 'user/user_profile.html', {"user":user})
