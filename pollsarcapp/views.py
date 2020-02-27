@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from .forms import PollFormValidation
+from .forms import PollFormValidation, RegisterForm
 from .models import Proposition, Poll, PollUser
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
@@ -72,7 +72,7 @@ def addUsersToPoll(id_users, poll):
     except User.DoesNotExist:
         return False
       
-def register(request):
+def register_old(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -84,6 +84,20 @@ def register(request):
             return redirect('home')
     else:
         form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
+
+def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = RegisterForm()
     return render(request, 'registration/register.html', {'form': form})
 
 def createPropositions(props, poll):

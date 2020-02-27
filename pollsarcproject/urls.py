@@ -20,7 +20,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home),
+    path('', views.home, name="home"),
     path('createPollForm', views.createPollForm),
     path('createPoll', views.createPoll),
     path('poll/<int:id>', views.showPoll),
