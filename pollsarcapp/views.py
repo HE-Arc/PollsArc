@@ -64,7 +64,8 @@ def createPoll(request):
         )
         poll.save()
 
-        createPropositions(propositions, poll)
+        poll.createPropositions(propositions)
+
         if addUsersToPoll(id_users, poll):
             return redirect('/')
 
@@ -97,10 +98,6 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'users/signup.html', {'form': form})
-
-def createPropositions(props, poll):
-    for prop in props:
-        Proposition(label=html.escape(prop), poll=poll).save()
 
 @require_http_methods("POST")
 @login_required(login_url='login')

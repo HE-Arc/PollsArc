@@ -11,6 +11,10 @@ class Poll(models.Model):
     expiration_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def createPropositions(self, props):
+    for prop in props:
+        Proposition(label=html.escape(prop), poll=self).save()
+
     def __str__(self):
         return "Poll -> " + self.name
 
