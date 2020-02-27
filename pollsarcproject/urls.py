@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from pollsarcapp import views
+from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,7 +25,8 @@ urlpatterns = [
     path('createPoll', views.createPoll),
     path('poll/<int:id>', views.showPoll, name='poll'),
     path('searchUsers/<str:name>', views.searchUsers),
+    path('register', views.register, name='register'),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('searchPolls/<str:name>', views.searchPolls),
     path('addUserVote', views.addUserVote, name='addUserVote'),
-    path('signup', views.signup, name='signup')
 ]

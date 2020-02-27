@@ -2,16 +2,14 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from .forms import PollFormValidation
+from .forms import PollFormValidation, RegisterForm
 from .models import Proposition, Poll, PollUser, PropositionUser
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 import json
-import html
 
-# Create your views here.
 def home(request):
     polls = Poll.objects.order_by('created_at').reverse()[:5]
     return render(request, 'home.html', {'latest_polls' : polls})
@@ -66,28 +64,14 @@ def createPoll(request):
 
         poll.createPropositions(propositions)
 
-        if addUsersToPoll(id_users, poll):
+        if poll.addUsers(request, id_users):
             return redirect('/')
 
     return render(request, 'createPoll.html')
 
-def addUsersToPoll(id_users, poll):
-    try:
-        users = []
-        for id in id_users:
-            users.append(User.objects.get(id=id))    
-
-        for user in users:
-            PollUser(poll=poll, user=user).save()
-            #Todo send email when user is add to a poll
-
-        return True
-    except User.DoesNotExist:
-        return False
-      
-def signup(request):
+def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -96,8 +80,8 @@ def signup(request):
             login(request, user)
             return redirect('home')
     else:
-        form = UserCreationForm()
-    return render(request, 'users/signup.html', {'form': form})
+        form = RegisterForm()
+    return render(request, 'registration/register.html', {'form': form})
 
 @require_http_methods("POST")
 @login_required(login_url='login')
