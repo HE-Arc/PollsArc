@@ -29,8 +29,11 @@ class Poll(models.Model):
             for id in id_users:
                 users.append(User.objects.get(id=id))    
 
+            PollUser(poll=self, user=request.user).save()
+
             for user in users:
                 PollUser(poll=self, user=user).save()
+
                 link = ''.join([get_current_site(request).domain, reverse('poll', args=[self.id])])
                 message = 'You has been added to the poll :  {}. You can access the poll using this link : {}'.format(self.name, link)
                 mail = ('Added to a poll', message, 'noreply@pollsarc', [user.email])
@@ -98,7 +101,7 @@ def hasAlreadyAnswered(self, poll_id):
 def hasInvitedToPoll(self, poll_id):
     has_invited_to_poll = False 
     invited_poll = PollUser.objects.filter(user=self, poll=Poll(poll_id))
-    
+
     if len(invited_poll) >= 1: 
         has_invited_to_poll = True
     else : 
