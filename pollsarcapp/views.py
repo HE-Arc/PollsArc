@@ -11,6 +11,7 @@ import html
 from django.core.mail import send_mass_mail
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def home(request):
     polls = Poll.objects.order_by('created_at').reverse()[:5]
@@ -103,5 +104,16 @@ def createPropositions(props, poll):
 
 def user_profile(request, username):
     user = User.objects.get(username=username)
-    polls = Poll.objects.filter(owner=user.id)
-    return render(request, 'user/user_profile.html', {"user":user, "created_polls" : polls})
+    polls_list = Poll.objects.filter(owner=user.id)
+
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(polls_list, 5)
+    try:
+        polls = paginator.page(page)
+    except PageNotAnInteger:
+        polls = paginator.page(1)
+    except EmptyPage:
+        polls = paginator.page(paginator.num_pages)
+
+    return render(request, 'user/user_profile.html', {"user": user, "created_polls" : polls})
