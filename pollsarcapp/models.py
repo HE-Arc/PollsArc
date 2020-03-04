@@ -42,7 +42,15 @@ class Poll(models.Model):
             return False
 
     def stats(self, request):
-        return {'labels' : ['test', 'test2'], 'data' : [15, 20]}
+        labels = []
+        data = []
+
+        propositions = Proposition.objects.filter(poll=self)
+        for proposition in propositions:
+            labels.append(proposition.label)
+            data.append(len(PropositionUser.objects.filter(proposition=proposition)))
+
+        return {'labels' : labels, 'data' : data}
 
     def __str__(self):
         return "Poll -> " + self.name
