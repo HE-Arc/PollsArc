@@ -103,4 +103,5 @@ def createPropositions(props, poll):
 
 def user_profile(request, username):
     user = User.objects.get(username=username)
-    return render(request, 'user/user_profile.html', {"user":user})
+    polls = Poll.objects.filter(owner=user.id)
+    return render(request, 'user/user_profile.html', {"user":user, "created_polls" : polls})

@@ -7,4 +7,12 @@
 <p>{{ user.username }}</p>
 <p>{{ user.email }}</p>
 
+<h1>Created by you</h1>
+<hr>
+
+{% for poll in created_polls %}
+    <h5>{{poll.name}}</h5>
+    <p>{{ poll.expiration_date }}</p>
+{% endfor %}
+
 {% endblock %}
