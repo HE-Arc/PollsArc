@@ -15,17 +15,26 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="/">PollsArc</a>
+      <a class="navbar-brand" href="{% url 'home' %}">PollsArc</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
-          <a class="nav-item nav-link" href="createPoll">Create a poll</a>
+          <a class="nav-item nav-link active" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link" href="{% url 'createPollForm' %}">Create a poll</a>
           <a class="nav-item nav-link" href="#">Profile</a>
         </div>
       </div>
+      {% if request.user.is_authenticated %}
+          {{ request.user }} | <a href="#" onClick="document.getElementById('logoutform').submit()"><button type="button">Logout</button></a>
+              <form id="logoutform" method="POST" action="{% url 'logout' %}">
+          {% csrf_token %}
+              <input type="hidden">
+              </form>
+          {% else %}
+              <a href="{% url 'register' %}">Sign up</a> | <a href="{% url 'login' %}">Sign in</a>
+      {% endif %}
     </nav>
     <div class="container">
       {% block content %}
