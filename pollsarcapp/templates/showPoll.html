@@ -16,7 +16,7 @@
         </form>
         {% endfor %}
     {% else %}
-        <p>You have already answered to the poll ! </p>
+        <p>You have already answered to the poll !</p>
     {% endif %}
 
     <div id="container" style="width: 75%;">
@@ -28,13 +28,13 @@
       type: 'pie',
       data: {
         datasets: [{
-          data: {{ data|safe }},
+          data: {{ stats.data|safe }},
           backgroundColor: [
             '#696969', '#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3'
           ],
           label: 'Population'
         }],
-        labels: {{ labels|safe }}
+        labels: {{ stats.labels|safe }}
       },
       options: {
         responsive: true

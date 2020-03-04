@@ -41,6 +41,9 @@ class Poll(models.Model):
         except User.DoesNotExist:
             return False
 
+    def stats(self, request):
+        return {'labels' : ['test', 'test2'], 'data' : [15, 20]}
+
     def __str__(self):
         return "Poll -> " + self.name
 
