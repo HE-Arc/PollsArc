@@ -6,7 +6,16 @@
     <p>Expiration date : {{ poll.expiration_date}}
 
     <h2>Propositions : </h2>
-    {% for prop in propositions %}
-        <p><strong>{{ prop.label }}</strong><button type="button" class="btn btn-success">Vote ! </button></p>
-    {% endfor %}
+    {% if not already_answered %}
+        {% for prop in propositions %}
+        <form method="POST" action="{% url 'addUserVote' %}">
+            {% csrf_token %}
+            <input type="hidden" name="proposition_id" value="{{ prop.id }}">
+            <!--<input type="hidden" name="poll_id" value>-->
+            <p><strong>{{ prop.label }}</strong><input type="submit" class="btn btn-success" value="Vote !"></p>
+        </form>
+        {% endfor %}
+    {% else %}
+        <p>You have already answered to the poll ! </p>
+    {% endif %}
 {% endblock %}

@@ -3,37 +3,41 @@ from django.http import HttpResponse, Http404
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from .forms import PollFormValidation, RegisterForm
-from .models import Proposition, Poll, PollUser
+from .models import Proposition, Poll, PollUser, PropositionUser
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 import json
-import html
-from django.core.mail import send_mass_mail
-from django.urls import reverse
-from django.contrib.sites.shortcuts import get_current_site
 
 def home(request):
     polls = Poll.objects.order_by('created_at').reverse()[:5]
     return render(request, 'home.html', {'latest_polls' : polls})
 
+@require_http_methods("GET")
+@login_required(login_url='login')
 def showPoll(request, id):
     try:
         poll = Poll.objects.get(pk=id)
         propositions = Proposition.objects.filter(poll=poll)
-        return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions})
+        return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'already_answered' : request.user.hasAlreadyAnswered(id)})
     except Poll.DoesNotExist:
         return Http404
 
+@require_http_methods("GET")
+@login_required(login_url='login')
 def createPollForm(request):
     return render(request, 'createPoll.html')
 
+@require_http_methods("GET")
 def searchUsers(request, name):
-    users = User.objects.filter(username__contains=name)#.exclude(is_superuser=False)
+    users = User.objects.filter(username__contains=name).exclude(is_superuser=True)
     list_users = []
     for user in users:
         list_users.append({'id' : user.id, 'label' : user.username})
     return JsonResponse({'users' : list_users})
 
+@require_http_methods("GET")
 def searchPolls(request, name):
     polls = list(Poll.objects.filter(name__contains=name))
     list_polls = []
@@ -41,10 +45,12 @@ def searchPolls(request, name):
         list_polls.append({'id' : poll.id, 'name' : poll.name, 'description' : poll.description})
     return JsonResponse({'polls' : list_polls})
 
+@require_http_methods("POST")
+@login_required(login_url='login')
 def createPoll(request):
     poll_form = PollFormValidation(request.POST or None)
 
-    if poll_form.is_valid() and request.user.is_authenticated:
+    if poll_form.is_valid():
         id_users = json.loads(request.POST.get("selected_user", ""))
         propositions = json.loads(request.POST.get("proposed_prop", ""))
 
@@ -56,32 +62,12 @@ def createPoll(request):
         )
         poll.save()
 
-        createPropositions(propositions, poll)
-        if addUsersToPoll(request, id_users, poll):
+        poll.createPropositions(propositions)
+
+        if poll.addUsers(request, id_users):
             return redirect('/')
 
     return render(request, 'createPoll.html')
-
-def addUsersToPoll(request, id_users, poll):
-    try:
-        users = []
-        mails = ()
-
-        for id in id_users:
-            users.append(User.objects.get(id=id))
-
-        for user in users:
-            PollUser(poll=poll, user=user).save()
-            link = ''.join([get_current_site(request).domain, reverse('poll', args=[poll.id])])
-            message = 'You has been added to the poll :  {}. You can access the poll using this link : {}'.format(poll.name, link)
-            mail = ('Added to a poll', message, 'noreply@pollsarc', [user.email])
-            mails = (mail,) + mails
-        
-        send_mass_mail(mails)
-
-        return True
-    except User.DoesNotExist:
-        return False
 
 def register(request):
     if request.method == 'POST':
@@ -97,6 +83,20 @@ def register(request):
         form = RegisterForm()
     return render(request, 'registration/register.html', {'form': form})
 
-def createPropositions(props, poll):
-    for prop in props:
-        Proposition(label=html.escape(prop), poll=poll).save()
+@require_http_methods("POST")
+@login_required(login_url='login')
+def addUserVote(request):
+    if request.method == 'POST':
+
+        try:
+            proposition = Proposition.objects.get(id=request.POST.get("proposition_id", ""))
+            poll_id = proposition.poll.id
+
+            if not request.user.hasAlreadyAnswered(poll_id):
+                PropositionUser(user=request.user, proposition=proposition).save()
+                return redirect('poll', id=poll_id)
+            else :
+                return redirect('poll', id=poll_id)
+        except Proposition.DoesNotExist:
+            return redirect('')
+
