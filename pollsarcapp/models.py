@@ -5,6 +5,7 @@ import html
 from django.core.mail import send_mass_mail
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
+import sys
 
 
 # Create your models here.
@@ -94,4 +95,15 @@ def hasAlreadyAnswered(self, poll_id):
 
     return user_has_already_answered
 
-User.add_to_class("hasAlreadyAnswered",hasAlreadyAnswered)
+def hasInvitedToPoll(self, poll_id):
+    has_invited_to_poll = False 
+    invited_poll = PollUser.objects.filter(user=self, poll=Poll(poll_id))
+    
+    if len(invited_poll) >= 1: 
+        has_invited_to_poll = True
+    else : 
+        has_invited_to_poll = False
+    return has_invited_to_poll
+
+User.add_to_class("hasAlreadyAnswered", hasAlreadyAnswered)
+User.add_to_class("hasInvitedToPoll", hasInvitedToPoll)

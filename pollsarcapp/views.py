@@ -14,15 +14,23 @@ def home(request):
     polls = Poll.objects.order_by('created_at').reverse()[:5]
     return render(request, 'home.html', {'latest_polls' : polls})
 
-@require_http_methods("GET")
 @login_required(login_url='login')
 def showPoll(request, id):
     try:
         poll = Poll.objects.get(pk=id)
-        propositions = Proposition.objects.filter(poll=poll)
-        return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'already_answered' : request.user.hasAlreadyAnswered(id)})
+
+        if poll.is_private:
+            if request.user.hasInvitedToPoll(id):
+                propositions = Proposition.objects.filter(poll=poll)
+                return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'already_answered' : request.user.hasAlreadyAnswered(id)})
+            else :
+                raise Http404
+        else : 
+            propositions = Proposition.objects.filter(poll=poll)
+            return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'already_answered' : request.user.hasAlreadyAnswered(id)})
+            
     except Poll.DoesNotExist:
-        return Http404
+        raise Http404
 
 @require_http_methods("GET")
 @login_required(login_url='login')
