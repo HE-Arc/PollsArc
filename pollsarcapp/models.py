@@ -48,7 +48,7 @@ class Poll(models.Model):
         propositions = Proposition.objects.filter(poll=self)
         for proposition in propositions:
             labels.append(proposition.label)
-            data.append(len(PropositionUser.objects.filter(proposition=proposition)))
+            data.append(proposition.votesNb())
 
         return {'labels' : labels, 'data' : data}
 
@@ -73,6 +73,9 @@ class PollUser(models.Model):
 class Proposition(models.Model):
     label = models.CharField(max_length=30)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+
+    def votesNb(self):
+        return len(PropositionUser.objects.filter(proposition=self))
 
     def __str__(self):
         return "Proposition -> label : " + self.label + ", poll : " + self.poll.name
