@@ -20,7 +20,7 @@ def showPoll(request, id):
     try:
         poll = Poll.objects.get(pk=id)
         propositions = Proposition.objects.filter(poll=poll)
-        return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'already_answered' : request.user.hasAlreadyAnswered(id)})
+        return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'already_answered' : request.user.hasAlreadyAnswered(id), 'labels' : ['1', '2'], 'data' : [30, 50]})
     except Poll.DoesNotExist:
         return Http404
 
@@ -69,6 +69,24 @@ def createPoll(request):
 
     return render(request, 'createPoll.html')
 
+def addUsersToPoll(id_users, poll):
+    try:
+        users = []
+        for id in id_users:
+            users.append(User.objects.get(id=id))
+
+        for user in users:
+            PollUser(poll=poll, user=user).save()
+
+        return True
+    except User.DoesNotExist:
+        return False
+
+def pollChartPie(request):
+    labels = []
+    data = []
+
+      
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
