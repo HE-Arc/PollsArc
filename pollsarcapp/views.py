@@ -12,6 +12,7 @@ from django.core.mail import send_mass_mail
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     polls = Poll.objects.order_by('created_at').reverse()[:5]
@@ -102,6 +103,7 @@ def createPropositions(props, poll):
     for prop in props:
         Proposition(label=html.escape(prop), poll=poll).save()
 
+@login_required(login_url='/accounts/login/')
 def user_profile(request, username):
     user = User.objects.get(username=username)
     polls_list = Poll.objects.filter(owner=user.id)
