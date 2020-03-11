@@ -71,7 +71,8 @@ def createPoll(request):
         poll.save()
 
         poll.createPropositions(propositions)
-
+        
+        id_users.append(request.user.id)
         if poll.addUsers(request, id_users):
             return redirect('/')
 
