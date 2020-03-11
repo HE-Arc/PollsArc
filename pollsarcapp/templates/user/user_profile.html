@@ -7,6 +7,11 @@
 <p>{{ user.username }}</p>
 <p>{{ user.email }}</p>
 
+{% load avatar_tags %}
+{% avatar user 100 class="img-circle img-responsive" id="user_avatar" %}
+
+<a href="{% url 'avatar_change' %}">Change your avatar</a>
+
 <h1>Created by you</h1>
 <hr>
 
@@ -41,8 +46,5 @@
     </ul>
     {% endif %}
 {% endif %}
-
-
-
 
 {% endblock %}

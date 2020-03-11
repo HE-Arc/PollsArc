@@ -28,6 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+AVATAR_STORAGE_DIR='pollsarcapp/avatars'
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bootstrap4'
+    'bootstrap4',
+    'avatar',
 ]
 
 MIDDLEWARE = [
