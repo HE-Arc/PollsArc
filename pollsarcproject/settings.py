@@ -25,7 +25,9 @@ SECRET_KEY = '8a8bb()44c7mp=&_@q^!==y18f(-*g41(g=e=fi%&jbf(^z4(w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'polls.srvz-webapp.he-arc.ch'
+]
 
 
 # Application definition
