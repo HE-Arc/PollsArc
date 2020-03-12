@@ -8,7 +8,7 @@
 <p>{{ user.email }}</p>
 
 {% load avatar_tags %}
-{% avatar user 100 class="img-circle img-responsive" id="user_avatar" %}
+<p>{% avatar user %}</p>
 
 <a href="{% url 'avatar_change' %}">Change your avatar</a>
 

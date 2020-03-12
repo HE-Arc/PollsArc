@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-AVATAR_STORAGE_DIR='pollsarcapp/avatars'
+AVATAR_STORAGE_DIR='pollsarcapp/static/avatars'
 
 
 # Application definition
