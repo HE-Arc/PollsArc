@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Name : {{ poll.name }}</h1>
+    <p>Description : {{ poll.description }}</p>
+    <p>Owner : {{ poll.owner }}</p>
+    <p>Expiration date : {{ poll.expiration_date}}
+
+    <h2>Propositions : </h2>
+    {% if not already_answered %}
+        {% for prop in propositions %}
+        <form method="POST" action="{% url 'addUserVote' %}">
+            {% csrf_token %}
+            <input type="hidden" name="proposition_id" value="{{ prop.id }}">
+            <!--<input type="hidden" name="poll_id" value>-->
+            <p><strong>{{ prop.label }}</strong><input type="submit" class="btn btn-success" value="Vote !"></p>
+        </form>
+        {% endfor %}
+    {% else %}
+        <p>You have already answered to the poll !</p>
+    {% endif %}
+
+    <div id="container" style="width: 75%;">
+      <canvas id="pie-chart"></canvas>
+    </div>
+  <script>
+
+    var config = {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: {{ stats.data|safe }},
+          backgroundColor: [
+            '#696969', '#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3'
+          ],
+          label: 'Population'
+        }],
+        labels: {{ stats.labels|safe }}
+      },
+      options: {
+        responsive: true
+      }
+    };
+
+    window.onload = function() {
+      var ctx = document.getElementById('pie-chart').getContext('2d');
+      window.myPie = new Chart(ctx, config);
+    };
+
+  </script>
+{% endblock %}
