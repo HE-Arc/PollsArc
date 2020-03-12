@@ -9,20 +9,33 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 import json
+import datetime
 
 def home(request):
     polls = Poll.objects.order_by('created_at').reverse()[:5]
     return render(request, 'home.html', {'latest_polls' : polls})
 
-@require_http_methods("GET")
 @login_required(login_url='login')
 def showPoll(request, id):
     try:
         poll = Poll.objects.get(pk=id)
-        propositions = Proposition.objects.filter(poll=poll)
-        return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'already_answered' : request.user.hasAlreadyAnswered(id), 'stats' : poll.stats(request)})
+
+        is_expired = True
+        if poll.expiration_date > datetime.date.today():
+            is_expired = False 
+
+        if poll.is_private:
+            if request.user.hasInvitedToPoll(id):
+                propositions = Proposition.objects.filter(poll=poll)
+                return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'is_expired':is_expired, 'already_answered' : request.user.hasAlreadyAnswered(id)})
+            else :
+                raise Http404
+        else : 
+            propositions = Proposition.objects.filter(poll=poll)
+            return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'is_expired':is_expired, 'already_answered' : request.user.hasAlreadyAnswered(id)})
+            
     except Poll.DoesNotExist:
-        return Http404
+        raise Http404
 
 @require_http_methods("GET")
 @login_required(login_url='login')
@@ -63,7 +76,8 @@ def createPoll(request):
         poll.save()
 
         poll.createPropositions(propositions)
-
+        
+        id_users.append(request.user.id)
         if poll.addUsers(request, id_users):
             return redirect('/')
 
