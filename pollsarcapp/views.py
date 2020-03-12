@@ -9,6 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 import json
+import datetime
 
 def home(request):
     polls = Poll.objects.order_by('created_at').reverse()[:5]
@@ -19,15 +20,19 @@ def showPoll(request, id):
     try:
         poll = Poll.objects.get(pk=id)
 
+        is_expired = True
+        if poll.expiration_date > datetime.date.today():
+            is_expired = False 
+
         if poll.is_private:
             if request.user.hasInvitedToPoll(id):
                 propositions = Proposition.objects.filter(poll=poll)
-                return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'already_answered' : request.user.hasAlreadyAnswered(id)})
+                return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'is_expired':is_expired, 'already_answered' : request.user.hasAlreadyAnswered(id)})
             else :
                 raise Http404
         else : 
             propositions = Proposition.objects.filter(poll=poll)
-            return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'already_answered' : request.user.hasAlreadyAnswered(id)})
+            return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'is_expired':is_expired, 'already_answered' : request.user.hasAlreadyAnswered(id)})
             
     except Poll.DoesNotExist:
         raise Http404
