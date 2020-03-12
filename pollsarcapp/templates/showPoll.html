@@ -5,18 +5,22 @@
     <p>Owner : {{ poll.owner }}</p>
     <p>Expiration date : {{ poll.expiration_date}}
 
-    <h2>Propositions : </h2>
-    {% if not already_answered %}
-        {% for prop in propositions %}
-        <form method="POST" action="{% url 'addUserVote' %}">
-            {% csrf_token %}
-            <input type="hidden" name="proposition_id" value="{{ prop.id }}">
-            <!--<input type="hidden" name="poll_id" value>-->
-            <p><strong>{{ prop.label }}</strong><input type="submit" class="btn btn-success" value="Vote !"></p>
-        </form>
-        {% endfor %}
+    {% if not is_expired %}
+        <h2>Propositions : </h2>
+        {% if not already_answered %}
+            {% for prop in propositions %}
+            <form method="POST" action="{% url 'addUserVote' %}">
+                {% csrf_token %}
+                <input type="hidden" name="proposition_id" value="{{ prop.id }}">
+                <!--<input type="hidden" name="poll_id" value>-->
+                <p><strong>{{ prop.label }}</strong><input type="submit" class="btn btn-success" value="Vote !"></p>
+            </form>
+            {% endfor %}
+        {% else %}
+            <p>You have already answered to the poll ! </p>
+        {% endif %}
     {% else %}
-        <p>You have already answered to the poll !</p>
+        <p>The poll is expired ! </p>
     {% endif %}
 
     <div id="container" style="width: 75%;">
