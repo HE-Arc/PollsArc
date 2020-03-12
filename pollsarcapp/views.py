@@ -83,6 +83,20 @@ def createPoll(request):
 
     return render(request, 'createPoll.html')
 
+def addUsersToPoll(id_users, poll):
+    try:
+        users = []
+        for id in id_users:
+            users.append(User.objects.get(id=id))
+
+        for user in users:
+            PollUser(poll=poll, user=user).save()
+
+        return True
+    except User.DoesNotExist:
+        return False
+
+      
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)

@@ -22,4 +22,33 @@
     {% else %}
         <p>The poll is expired ! </p>
     {% endif %}
+
+    <div id="container" style="width: 75%;">
+      <canvas id="pie-chart"></canvas>
+    </div>
+  <script>
+
+    var config = {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: {{ stats.data|safe }},
+          backgroundColor: [
+            '#696969', '#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3'
+          ],
+          label: 'Population'
+        }],
+        labels: {{ stats.labels|safe }}
+      },
+      options: {
+        responsive: true
+      }
+    };
+
+    window.onload = function() {
+      var ctx = document.getElementById('pie-chart').getContext('2d');
+      window.myPie = new Chart(ctx, config);
+    };
+
+  </script>
 {% endblock %}
