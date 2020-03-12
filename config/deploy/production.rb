@@ -59,3 +59,7 @@
 #     auth_methods: %w(publickey password)
 #     # password: "please use keys"
 #   }
+server "polls.srvz-webapp.he-arc.ch", user: "poweruser", 
+			              roles: %w{app db web}, port: 1434
+
+set :deploy_to, "/var/www/#{fetch(:application)}"
