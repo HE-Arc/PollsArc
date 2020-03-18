@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Avatars settings
 
 AVATAR_STORAGE_DIR='pollsarcapp/static/avatars'
 
