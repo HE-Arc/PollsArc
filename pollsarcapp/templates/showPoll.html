@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
+{% load avatar_tags %}
     <h1>Name : {{ poll.name }}</h1>
     <p>Description : {{ poll.description }}</p>
     <p>Owner : {{ poll.owner }}</p>
+    <p>{% avatar user %}</p>
     <p>Expiration date : {{ poll.expiration_date}}
 
     {% if not is_expired %}
@@ -13,7 +15,7 @@
                 {% csrf_token %}
                 <input type="hidden" name="proposition_id" value="{{ prop.id }}">
                 <!--<input type="hidden" name="poll_id" value>-->
-                <p><strong>{{ prop.label }}</strong><input type="submit" class="btn btn-success" value="Vote !"></p>
+                <p><strong>{{ prop.label }}</strong>&nbsp;&nbsp;&nbsp;<input type="submit" class="btn btn-success" value="Vote !"></p>
             </form>
             {% endfor %}
         {% else %}

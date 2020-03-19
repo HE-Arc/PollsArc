@@ -9,6 +9,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 import json
+import html
+from django.core.mail import send_mass_mail
+from django.urls import reverse
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 import datetime
 
 def home(request):
@@ -111,6 +117,23 @@ def register(request):
         form = RegisterForm()
     return render(request, 'registration/register.html', {'form': form})
 
+@login_required(login_url='/accounts/login/')
+def user_profile(request, username):
+    user = User.objects.get(username=username)
+    polls_list = Poll.objects.filter(owner=user.id)
+
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(polls_list, 5)
+    try:
+        polls = paginator.page(page)
+    except PageNotAnInteger:
+        polls = paginator.page(1)
+    except EmptyPage:
+        polls = paginator.page(paginator.num_pages)
+
+    return render(request, 'user/user_profile.html', {"user": user, "created_polls" : polls})
+
 @require_http_methods("POST")
 @login_required(login_url='login')
 def addUserVote(request):
@@ -127,4 +150,3 @@ def addUserVote(request):
                 return redirect('poll', id=poll_id)
         except Proposition.DoesNotExist:
             return redirect('')
-

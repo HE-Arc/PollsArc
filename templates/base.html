@@ -23,17 +23,17 @@
         <div class="navbar-nav">
           <a class="nav-item nav-link active" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
           <a class="nav-item nav-link" href="{% url 'createPollForm' %}">Create a poll</a>
-          <a class="nav-item nav-link" href="#">Profile</a>
+          <a class="nav-item nav-link" href="{% url 'profile' request.user %}">Profile</a>
         </div>
       </div>
       {% if request.user.is_authenticated %}
-          {{ request.user }} | <a href="#" onClick="document.getElementById('logoutform').submit()"><button type="button">Logout</button></a>
-              <form id="logoutform" method="POST" action="{% url 'logout' %}">
-          {% csrf_token %}
-              <input type="hidden">
-              </form>
-          {% else %}
-              <a href="{% url 'register' %}">Sign up</a> | <a href="{% url 'login' %}">Sign in</a>
+        <a href="{% url 'profile' request.user %}">{{ request.user }}</a> | <a href="#" onClick="document.getElementById('logoutform').submit()"><button type="button">Logout</button></a>
+        <form id="logoutform" method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <input type="hidden">
+        </form>
+      {% else %}
+          <a href="{% url 'register' %}">Sign up</a> | <a href="{% url 'login' %}">Sign in</a>
       {% endif %}
     </nav>
     <div class="container">

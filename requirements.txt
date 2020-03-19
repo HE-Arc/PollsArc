@@ -4,3 +4,4 @@ Django==3.0.3
 djangorestframework==3.11.0
 pytz==2019.3
 sqlparse==0.3.0
+django-avatar==5.0.0
