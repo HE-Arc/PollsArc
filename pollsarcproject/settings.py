@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 
 AVATAR_STORAGE_DIR='pollsarcapp/static/avatars'
 
+#AVATAR_CHANGE_TEMPLATE='pollsarcapp/templates/user/add.html'
+
 
 # Application definition
 
