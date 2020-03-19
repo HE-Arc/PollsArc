@@ -20,14 +20,15 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name="home"),
-    path('createPollForm', views.createPollForm),
+    path('', views.home, name='home'),
+    path('createPollForm', views.createPollForm, name='createPollForm'),
     path('createPoll', views.createPoll),
-    path('poll/<int:id>', views.showPoll, name="poll"),
+    path('poll/<int:id>', views.showPoll, name='poll'),
     path('searchUsers/<str:name>', views.searchUsers),
     path('register', views.register, name='register'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('searchPolls/<str:name>', views.searchPolls),
     path('profile/<str:username>', views.user_profile, name="profile"),
     path('avatar/', include('avatar.urls')),
+    path('addUserVote', views.addUserVote, name='addUserVote'),
 ]

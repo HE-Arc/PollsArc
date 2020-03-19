@@ -49,26 +49,31 @@ function removeUser(element){
 let nb_prop = 0
 let proposed_props = []
 
-let prop_input = document.getElementById("add_proposition_button")
+let prop_button = document.getElementById("add_proposition_button")
 
-if(prop_input){
-    prop_input.addEventListener("click", (e) => {
-        let prop_input = document.getElementById("add_proposition")
-        let prop = prop_input.value
-    
-        prop_input.value = ""
-        prop_input.focus()
-    
-        nb_prop++
-        proposed_props.push(prop)
-    
-        //document.getElementById("proposed_prop_display").innerHTML += "<span><strong>"+ nb_prop + ")</strong> "+ prop +"</span>"
-        document.getElementById("proposed_prop_display").innerHTML += "<div id='prop_'" + nb_prop + "><strong>"+ nb_prop + ")</strong> "+ prop +'<button type="button" class="close" onclick="removeProp(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-        document.getElementById("proposed_prop").value = JSON.stringify(proposed_props)
+if(prop_button){
+    prop_button.addEventListener("click", (e) => {
+        addProposition();
     })
 }
 
+function addProposition(){
+    let prop_input = document.getElementById("add_proposition")
+    let prop = prop_input.value
 
+    if (prop == "")
+        return;
+
+    prop_input.value = ""
+    prop_input.focus()
+
+    nb_prop++
+    proposed_props.push(prop)
+
+    //document.getElementById("proposed_prop_display").innerHTML += "<span><strong>"+ nb_prop + ")</strong> "+ prop +"</span>"
+    document.getElementById("proposed_prop_display").innerHTML += "<div id='prop_'" + nb_prop + "><strong>"+ nb_prop + ")</strong> "+ prop +'<button type="button" class="close" onclick="removeProp(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
+    document.getElementById("proposed_prop").value = JSON.stringify(proposed_props)
+}
 
 function removeProp(element){
     let parent = element.parentNode
@@ -89,3 +94,11 @@ $("#poll_form").submit(() => {
     $("#search_user").prop('disabled', true)
     return true
 })
+
+// Prevent from sending the form from the addProposition field
+$("#add_proposition").keypress(function (event) {
+    if (event.keyCode == 13) {
+        event.preventDefault();
+        addProposition();
+    }
+});

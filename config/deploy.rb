@@ -2,7 +2,37 @@
 lock "~> 3.12.1"
 
 set :application, "PollsArc"
-set :repo_url, "git@github.com:HE-Arc/PollsArc.git"
+set :repo_url, "https://github.com/HE-Arc/PollsArc.git"
+
+after 'deploy:updating', 'python:create_venv'
+
+namespace :python do
+
+    def venv_path
+        File.join(shared_path, 'env')
+    end
+
+    desc 'Create venv'
+    task :create_venv do
+        on roles([:app, :web]) do |h|
+	    execute "python3.6 -m venv #{venv_path}"
+            execute "source #{venv_path}/bin/activate"
+	    execute "#{venv_path}/bin/pip install -r #{release_path}/requirements.txt"
+            execute "python3.6 #{release_path}/manage.py migrate"
+        end
+    end
+end
+
+after 'deploy:publishing', 'uwsgi:restart'
+
+namespace :uwsgi do
+    desc 'Restart application'
+    task :restart do
+        on roles(:web) do |h|
+	    execute :sudo, 'sv reload uwsgi'
+	end
+    end
+end
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
