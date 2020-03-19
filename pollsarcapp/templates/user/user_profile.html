@@ -4,24 +4,24 @@
 
 <h1>Profile</h1>
 
-<p>{{ user.username }}</p>
-<p>{{ user.email }}</p>
+<p>Username : {{ user.username }}</p>
+<p>Email : {{ user.email }}</p>
 
 {% load avatar_tags %}
 <p>{% avatar user %}</p>
 
 <a href="{% url 'avatar_change' %}">Change your avatar</a>
 
-<h1>Created by you</h1>
+<h1>Your polls</h1>
 <hr>
 
 {% if created_polls|length == 0 %}
-    <h5>You don't have any created polls yet :(</h5>
+    <h5>You don't have any polls yet :(</h5>
 {% else %}
     
     {% for poll in created_polls %}
-        <h5>{{poll.name}}</h5>
-        <p>{{ poll.expiration_date }}</p>
+        <a href="{% url 'poll' poll.id %}"><h5>{{poll.name}}</h5></a>
+        <p>expired {{ poll.expiration_date }}</p>
     {% endfor %}
 
     {% if created_polls.has_other_pages %}
