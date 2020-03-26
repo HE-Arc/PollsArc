@@ -20,9 +20,6 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-<<<<<<< HEAD
-    path('home', views.home)
-=======
     path('', views.home, name='home'),
     path('createPollForm', views.createPollForm, name='createPollForm'),
     path('createPoll', views.createPoll),
@@ -34,5 +31,4 @@ urlpatterns = [
     path('profile/<str:username>', views.user_profile, name="profile"),
     path('avatar/', include('avatar.urls')),
     path('addUserVote', views.addUserVote, name='addUserVote'),
->>>>>>> abe7a836ff8fe4d5782f905086aa09b0407cbe79
 ]
