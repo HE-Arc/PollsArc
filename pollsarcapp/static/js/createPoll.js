@@ -20,10 +20,7 @@ if(search_user_input){
                                 added_users.push([ui.item.id, added_user])
                                 
                                 document.getElementById("selected_user_display").innerHTML += "<div class='user' id=user_"+ ui.item.id +">"+ added_user +'<button type="button" class="close" onclick="removeUser(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-        
-                                document.getElementById("selected_user").value = JSON.stringify(added_users.map((v,i) => {return v[0]}))       
-                                console.log(document.getElementById("selected_user").value);
-                                
+                                document.getElementById("selected_user").value = JSON.stringify(added_users.map((v,i) => {return v[0]}))
                             }                    
                         }
                     })
