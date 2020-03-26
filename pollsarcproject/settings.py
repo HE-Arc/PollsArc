@@ -30,6 +30,12 @@ ALLOWED_HOSTS = [
     '127.0.0.1'
 ]
 
+# Avatars settings
+
+AVATAR_STORAGE_DIR='pollsarcapp/static/avatars'
+
+#AVATAR_CHANGE_TEMPLATE='pollsarcapp/templates/user/add.html'
+
 
 # Application definition
 
@@ -41,7 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bootstrap4'
+    'bootstrap4',
+    'avatar',
 ]
 
 MIDDLEWARE = [

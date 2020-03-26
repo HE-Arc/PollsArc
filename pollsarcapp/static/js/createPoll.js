@@ -62,7 +62,7 @@ function addProposition(){
     let prop_input = document.getElementById("add_proposition")
     let prop = prop_input.value
 
-    if (prop == "")
+    if (prop == "" || prop.match(/^\d/))
         return;
 
     prop_input.value = ""
@@ -72,20 +72,18 @@ function addProposition(){
     proposed_props.push(prop)
 
     //document.getElementById("proposed_prop_display").innerHTML += "<span><strong>"+ nb_prop + ")</strong> "+ prop +"</span>"
-    document.getElementById("proposed_prop_display").innerHTML += "<div id='prop_'" + nb_prop + "><strong>"+ nb_prop + ")</strong> "+ prop +'<button type="button" class="close" onclick="removeProp(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
+    document.getElementById("proposed_prop_display").innerHTML += "<div id='"+ prop +"'><strong>"+ nb_prop + ")</strong> "+ prop +'<button type="button" class="close" onclick="removeProp(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
     document.getElementById("proposed_prop").value = JSON.stringify(proposed_props)
 }
 
 function removeProp(element){
     let parent = element.parentNode
 
-    let index_to_remove = 0;
-    proposed_props.forEach( (elem, index) =>{
-        if("prop_" + elem === parent.id){
-            index_to_remove = index
-        }
-    })
-    proposed_props.splice(index_to_remove,1)
+    var index = proposed_props.indexOf(parent.id);
+    if (index !== -1) proposed_props.splice(index, 1);
+
+    console.log(proposed_props);
+
     parent.remove()
 }
 
