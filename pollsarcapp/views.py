@@ -12,8 +12,8 @@ import json
 import datetime
 
 def home(request):
-    polls = Poll.objects.order_by('created_at').reverse()[:5]
-    return render(request, 'home.html', {'latest_polls' : polls})
+    latest_polls = Poll.objects.filter(is_private=False).order_by('created_at').reverse()[:5]
+    return render(request, 'home.html', {'latest_polls' :latest_polls})
 
 @login_required(login_url='login')
 def showPoll(request, id):
@@ -52,7 +52,7 @@ def searchUsers(request, name):
 
 @require_http_methods("GET")
 def searchPolls(request, name):
-    polls = list(Poll.objects.filter(name__contains=name))
+    polls = list(Poll.objects.filter(name__contains=name).filter(is_private=False))
     list_polls = []
     for poll in polls:
         list_polls.append({'id' : poll.id, 'name' : poll.name, 'description' : poll.description})

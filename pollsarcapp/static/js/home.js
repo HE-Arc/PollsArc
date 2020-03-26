@@ -10,7 +10,7 @@ if(search_poll_input){
                 data.polls.forEach(element => {
                     console.log(element.id);
                     
-                    proposed_polls_input.innerHTML += "<div class='proposed_poll_display'><strong>Name : "+ element.name +"</strong><br> descrption : "+ element.description +"</div>"
+                    proposed_polls_input.innerHTML += "<div class='proposed_poll_display'><a href='poll/"+ element.id +"'><strong>Name : "+ element.name +"</strong><br> descrption : "+ element.description +"</a></div>"
               });
             })
         })
