@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Bienvenue !</h2>
+    <h2>Search Poll</h2>
+    <input type="search" placeholder="Search a poll by name" id="search_poll" class="form-control">
+    <div id="proposed_polls">
+    </div>
+    <h2>Latest poll</h2>
+    {% if latest_polls %}
+    {% for poll in latest_polls %}
+        <p><strong> Poll name : </strong><a href="poll/{{ poll.id }}">{{ poll.name }}</a></p>
+    {% endfor %}
+    {% endif %}
+{% endblock %}

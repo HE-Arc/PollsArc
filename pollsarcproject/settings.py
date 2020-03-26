@@ -25,19 +25,29 @@ SECRET_KEY = '8a8bb()44c7mp=&_@q^!==y18f(-*g41(g=e=fi%&jbf(^z4(w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'polls.srvz-webapp.he-arc.ch'
+]
+
+# Avatars settings
+
+AVATAR_STORAGE_DIR='pollsarcapp/static/avatars'
+
+#AVATAR_CHANGE_TEMPLATE='pollsarcapp/templates/user/add.html'
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'pollsarcapp',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'pollsarcapp'
+    'bootstrap4',
+    'avatar',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +65,9 @@ ROOT_URLCONF = 'pollsarcproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,3 +131,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+LOGIN_REDIRECT_URL = '/'
+
+# display email in the console instead send email
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = 'ef58f90fb2147b'
+EMAIL_HOST_PASSWORD = '6483de66df1770'
+EMAIL_PORT = '2525'
