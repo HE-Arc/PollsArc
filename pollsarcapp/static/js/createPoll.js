@@ -21,12 +21,30 @@ if(search_user_input){
                                 
                                 document.getElementById("selected_user_display").innerHTML += "<div class='user' id=user_"+ ui.item.id +">"+ added_user +'<button type="button" class="close" onclick="removeUser(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
         
-                                document.getElementById("selected_user").value = JSON.stringify(added_users.map((v,i) => {return v[0]}))
+                                document.getElementById("selected_user").value = JSON.stringify(added_users.map((v,i) => {return v[0]}))       
+                                console.log(document.getElementById("selected_user").value);
+                                
                             }                    
                         }
                     })
                 })
             })
+    })
+}
+
+let is_private_checkbox = document.getElementById('is_private')
+
+if(is_private_checkbox)
+{
+    is_private_checkbox.addEventListener('change', function(e) {
+        let search_group = document.getElementById('search_user_group')
+        
+        if(is_private_checkbox.checked){
+            search_group.style.display = 'block'
+        }else {
+            added_users = []
+            search_group.style.display = 'none'
+        }
     })
 }
 
@@ -71,7 +89,6 @@ function addProposition(){
     nb_prop++
     proposed_props.push(prop)
 
-    //document.getElementById("proposed_prop_display").innerHTML += "<span><strong>"+ nb_prop + ")</strong> "+ prop +"</span>"
     document.getElementById("proposed_prop_display").innerHTML += "<div id='"+ prop +"'><strong>"+ nb_prop + ")</strong> "+ prop +'<button type="button" class="close" onclick="removeProp(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
     document.getElementById("proposed_prop").value = JSON.stringify(proposed_props)
 }
@@ -82,15 +99,19 @@ function removeProp(element){
     var index = proposed_props.indexOf(parent.id);
     if (index !== -1) proposed_props.splice(index, 1);
 
-    console.log(proposed_props);
-
     parent.remove()
 }
 
 
 // Allow to don't send the search field on the server
 $("#poll_form").submit(() => {
-    $("#search_user").prop('disabled', true)
+    /*if(proposed_props.length == 0){
+        alert("You must enter propositions ! ")
+        return false
+    }else {
+        $("#search_user").prop('disabled', true)
+        return true
+    }*/$("#search_user").prop('disabled', true)
     return true
 })
 

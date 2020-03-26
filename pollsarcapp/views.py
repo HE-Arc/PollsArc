@@ -68,7 +68,7 @@ def searchPolls(request, name):
 def createPoll(request):
     poll_form = PollFormValidation(request.POST or None)
 
-    if poll_form.is_valid():
+    if poll_form.is_valid() and request.POST.get("proposed_prop", "") != "[]":
         id_users = json.loads(request.POST.get("selected_user", ""))
         propositions = json.loads(request.POST.get("proposed_prop", ""))
 
