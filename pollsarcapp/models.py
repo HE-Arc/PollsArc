@@ -112,6 +112,14 @@ def hasAlreadyAnswered(self, poll_id):
 
     return user_has_already_answered
 
+def getInvitedPolls(self):
+    invited_polls = []
+    for pollUser in PollUser.objects.filter(user=self):
+        invited_polls.append(pollUser.poll)
+
+    return invited_polls
+
+
 def hasInvitedToPoll(self, poll_id):
     has_invited_to_poll = False 
     invited_poll = PollUser.objects.filter(user=self, poll=Poll(poll_id))
@@ -124,3 +132,4 @@ def hasInvitedToPoll(self, poll_id):
 
 User.add_to_class("hasAlreadyAnswered", hasAlreadyAnswered)
 User.add_to_class("hasInvitedToPoll", hasInvitedToPoll)
+User.add_to_class("getInvitedPolls", getInvitedPolls)

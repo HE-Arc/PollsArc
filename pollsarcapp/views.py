@@ -119,7 +119,7 @@ def register(request):
 @login_required(login_url='/accounts/login/')
 def user_profile(request, username):
     user = User.objects.get(username=username)
-    polls_list = Poll.objects.filter(owner=user.id)
+    polls_list = user.getInvitedPolls()
 
     page = request.GET.get('page', 1)
 
