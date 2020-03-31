@@ -26,7 +26,8 @@ SECRET_KEY = '8a8bb()44c7mp=&_@q^!==y18f(-*g41(g=e=fi%&jbf(^z4(w'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'polls.srvz-webapp.he-arc.ch'
+    'polls.srvz-webapp.he-arc.ch',
+    '127.0.0.1'
 ]
 
 # Avatars settings

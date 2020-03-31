@@ -14,12 +14,11 @@ from django.core.mail import send_mass_mail
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.decorators import login_required
 import datetime
 
 def home(request):
-    polls = Poll.objects.order_by('created_at').reverse()[:5]
-    return render(request, 'home.html', {'latest_polls' : polls})
+    latest_polls = Poll.objects.filter(is_private=False).order_by('created_at').reverse()[:5]
+    return render(request, 'home.html', {'latest_polls' : latest_polls})
 
 @login_required(login_url='login')
 def showPoll(request, id):
@@ -58,7 +57,7 @@ def searchUsers(request, name):
 
 @require_http_methods("GET")
 def searchPolls(request, name):
-    polls = list(Poll.objects.filter(name__contains=name))
+    polls = list(Poll.objects.filter(name__contains=name).filter(is_private=False))
     list_polls = []
     for poll in polls:
         list_polls.append({'id' : poll.id, 'name' : poll.name, 'description' : poll.description})
@@ -69,7 +68,7 @@ def searchPolls(request, name):
 def createPoll(request):
     poll_form = PollFormValidation(request.POST or None)
 
-    if poll_form.is_valid():
+    if poll_form.is_valid() and request.POST.get("proposed_prop", "") != "[]":
         id_users = json.loads(request.POST.get("selected_user", ""))
         propositions = json.loads(request.POST.get("proposed_prop", ""))
 
@@ -85,7 +84,7 @@ def createPoll(request):
         
         id_users.append(request.user.id)
         if poll.addUsers(request, id_users):
-            return redirect('/')
+            return redirect('poll/' +  str(poll.id))
 
     return render(request, 'createPoll.html')
 
@@ -120,7 +119,7 @@ def register(request):
 @login_required(login_url='/accounts/login/')
 def user_profile(request, username):
     user = User.objects.get(username=username)
-    polls_list = Poll.objects.filter(owner=user.id)
+    polls_list = user.getInvitedPolls()
 
     page = request.GET.get('page', 1)
 
