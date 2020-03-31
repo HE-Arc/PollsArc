@@ -22,6 +22,7 @@ def home(request):
 
 @login_required(login_url='login')
 def showPoll(request, id):
+    
     try:
         poll = Poll.objects.get(pk=id)
 
