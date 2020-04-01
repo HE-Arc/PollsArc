@@ -145,22 +145,25 @@ def register(request):
         form = RegisterForm()
     return render(request, 'registration/register.html', {'form': form})
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='login')
 def user_profile(request, username):
-    user = User.objects.get(username=username)
-    polls_list = user.getInvitedPolls()
+    if request.user.username == username :
+        user = User.objects.get(username=username)
+        polls_list = user.getInvitedPolls()
 
-    page = request.GET.get('page', 1)
+        page = request.GET.get('page', 1)
 
-    paginator = Paginator(polls_list, 5)
-    try:
-        polls = paginator.page(page)
-    except PageNotAnInteger:
-        polls = paginator.page(1)
-    except EmptyPage:
-        polls = paginator.page(paginator.num_pages)
+        paginator = Paginator(polls_list, 5)
+        try:
+            polls = paginator.page(page)
+        except PageNotAnInteger:
+            polls = paginator.page(1)
+        except EmptyPage:
+            polls = paginator.page(paginator.num_pages)
 
-    return render(request, 'user/user_profile.html', {"user": user, "created_polls" : polls})
+        return render(request, 'user/user_profile.html', {"user": user, "created_polls" : polls})
+    else:
+       return redirect('home')
 
 @require_http_methods("POST")
 @login_required(login_url='login')
