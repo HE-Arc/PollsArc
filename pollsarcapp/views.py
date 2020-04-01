@@ -132,6 +132,16 @@ def createPoll(request):
 
       
 def register(request):
+    """Validate the register form, save and log the user
+    
+    Arguments:
+        request {Request} -- Django request
+    
+    Returns:
+        redirect -- If the form is valid, redirect to the home page as connected user
+        redirect -- If the form is not valid, redirect to the registration form with errors
+    """
+
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
