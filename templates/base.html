@@ -25,16 +25,20 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
+      <ul class="nav navbar-nav mr-auto">
         <li class="nav-item">
           <a class="nav-link active" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
         </li>
+        {% if request.user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'createPollForm' %}">Create a poll</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'profile' request.user %}">Profile</a>
         </li>
+        {% endif %}
+      </ul>
+      <ul class="nav navbar-nav ml-auto">
         {% if request.user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'profile' request.user %}">{{ request.user }}</a>
@@ -55,7 +59,7 @@
           <a class="nav-link" href="{% url 'login' %}">Sign in</a>
         </li>
         {% endif %}
-      </div>
+      </ul>
     </div>
   </nav>
   <div id="main-page" class="container-fluid">
