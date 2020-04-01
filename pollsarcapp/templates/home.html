@@ -1,14 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
-    <h2>Bienvenue !</h2>
-    <h2>Search Poll</h2>
-    <input type="search" placeholder="Search a poll by name" id="search_poll" class="form-control">
-    <div id="proposed_polls">
+<section id="call-to-action" class="py-5">
+    <div class="container h-100">
+        <div class="h-100 d-flex flex-column justify-content-center align-items-start text-left">
+            <h1 class="display-1">Bienvenue!</h1>
+            <p class="display-4">Realisez simplement et rapidement des sondages grâce à PollsArc.</p>
+        </div>
     </div>
-    <h2>Latest poll</h2>
-    {% if latest_polls %}
-    {% for poll in latest_polls %}
+</section>
+
+<section id="search-poll" class="py-5">
+    <div class="container h-100">
+        <h2>Search Poll</h2>
+        <input type="search" placeholder="Search a poll by name" id="search_poll" class="form-control">
+        <div id="proposed_polls">
+        </div>
+    </div>
+</section>
+
+<section id="latest-poll" class="py-5">
+    <div class="container h-100">
+        <h2>Latest poll</h2>
+        {% if latest_polls %}
+        {% for poll in latest_polls %}
         <p><strong> Poll name : </strong><a href="poll/{{ poll.id }}">{{ poll.name }}</a></p>
-    {% endfor %}
-    {% endif %}
+        {% endfor %}
+        {% else %}
+        <p class="font-weight-bold">There is no poll for the moment.</p>
+        {% endif %}
+    </div>
+</section>
 {% endblock %}
