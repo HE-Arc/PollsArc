@@ -18,10 +18,26 @@ class Poll(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def createPropositions(self, props):
+        """Create a proposition for a poll
+        
+        Arguments:
+            props {list} -- List of propositions
+        """
+
         for prop in props:
             Proposition(label=html.escape(prop), poll=self).save()
 
     def addUsers(self, request, id_users):
+        """Add users to a poll, Also send a email to each user added to the poll
+        
+        Arguments:
+            request {Request} -- Django request
+            id_users {list} -- List that contains the id of all user to add
+        
+        Returns:
+            bool -- True if all user existing, False is user doesn't exist
+        """
+
         try:
             users = []
             mails = ()
@@ -46,6 +62,15 @@ class Poll(models.Model):
             return False
 
     def stats(self, request):
+        """Get stats for a poll
+        
+        Arguments:
+            request {Request} -- Django request
+        
+        Returns:
+            dict -- Dict that reprensents JSON stats for a poll
+        """
+
         labels = []
         data = []
 
@@ -100,6 +125,15 @@ class PropositionUser(models.Model):
         verbose_name_plural = "PropositionUser"
 
 def hasAlreadyAnswered(self, poll_id):
+    """Check if a user has already answered to a poll
+    
+    Arguments:
+        poll_id {int} -- id of the poll
+    
+    Returns:
+        bool -- True if user has already answerd, False otherwise
+    """
+
     user_has_already_answered = False
     try: 
         answered_polls = list(PropositionUser.objects.filter(user=self))
@@ -113,6 +147,12 @@ def hasAlreadyAnswered(self, poll_id):
     return user_has_already_answered
 
 def getInvitedPolls(self):
+    """Get all polls where the user is invited
+    
+    Returns:
+        list -- List of all polls where the user is invited
+    """
+
     invited_polls = []
     for pollUser in PollUser.objects.filter(user=self):
         invited_polls.append(pollUser.poll)
@@ -121,6 +161,15 @@ def getInvitedPolls(self):
 
 
 def hasInvitedToPoll(self, poll_id):
+    """Allow to check if a user is invited to a poll
+    
+    Arguments:
+        poll_id {int} -- poll id
+    
+    Returns:
+        bool -- True is user is invited, False otherwise
+    """
+
     has_invited_to_poll = False 
     invited_poll = PollUser.objects.filter(user=self, poll=Poll(poll_id))
 
@@ -130,6 +179,7 @@ def hasInvitedToPoll(self, poll_id):
         has_invited_to_poll = False
     return has_invited_to_poll
 
+# Alow to add function to the User model
 User.add_to_class("hasAlreadyAnswered", hasAlreadyAnswered)
 User.add_to_class("hasInvitedToPoll", hasInvitedToPoll)
 User.add_to_class("getInvitedPolls", getInvitedPolls)
