@@ -17,11 +17,11 @@ class Poll(models.Model):
     expiration_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def createPropositions(self, props):
+    def create_propositions(self, props):
         for prop in props:
             Proposition(label=html.escape(prop), poll=self).save()
 
-    def addUsers(self, request, id_users):
+    def add_users(self, request, id_users):
         try:
             users = []
             mails = ()
@@ -45,14 +45,15 @@ class Poll(models.Model):
         except User.DoesNotExist:
             return False
 
-    def stats(self, request):
+    @property
+    def stats(self):
         labels = []
         data = []
 
         propositions = Proposition.objects.filter(poll=self)
         for proposition in propositions:
             labels.append(proposition.label)
-            data.append(proposition.votesNb())
+            data.append(proposition.votes_nb())
 
         return {'labels' : labels, 'data' : data}
 
@@ -78,7 +79,7 @@ class Proposition(models.Model):
     label = models.CharField(max_length=30)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 
-    def votesNb(self):
+    def votes_nb(self):
         return len(PropositionUser.objects.filter(proposition=self))
 
     def __str__(self):
@@ -99,7 +100,7 @@ class PropositionUser(models.Model):
         verbose_name = "PropositionUser"
         verbose_name_plural = "PropositionUser"
 
-def hasAlreadyAnswered(self, poll_id):
+def has_already_answered(self, poll_id):
     user_has_already_answered = False
     try: 
         answered_polls = list(PropositionUser.objects.filter(user=self))
@@ -112,7 +113,7 @@ def hasAlreadyAnswered(self, poll_id):
 
     return user_has_already_answered
 
-def getInvitedPolls(self):
+def get_invited_polls(self):
     invited_polls = []
     for pollUser in PollUser.objects.filter(user=self):
         invited_polls.append(pollUser.poll)
@@ -120,7 +121,7 @@ def getInvitedPolls(self):
     return invited_polls
 
 
-def hasInvitedToPoll(self, poll_id):
+def has_invited_to_poll(self, poll_id):
     has_invited_to_poll = False 
     invited_poll = PollUser.objects.filter(user=self, poll=Poll(poll_id))
 
@@ -130,6 +131,6 @@ def hasInvitedToPoll(self, poll_id):
         has_invited_to_poll = False
     return has_invited_to_poll
 
-User.add_to_class("hasAlreadyAnswered", hasAlreadyAnswered)
-User.add_to_class("hasInvitedToPoll", hasInvitedToPoll)
-User.add_to_class("getInvitedPolls", getInvitedPolls)
+User.add_to_class("has_already_answered", has_already_answered)
+User.add_to_class("has_invited_to_poll", has_invited_to_poll)
+User.add_to_class("get_invited_polls", get_invited_polls)

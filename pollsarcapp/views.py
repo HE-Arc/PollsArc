@@ -21,7 +21,7 @@ def home(request):
     return render(request, 'home.html', {'latest_polls' : latest_polls})
 
 @login_required(login_url='login')
-def showPoll(request, id):
+def show_poll(request, id):
     try:
         poll = Poll.objects.get(pk=id)
 
@@ -30,25 +30,25 @@ def showPoll(request, id):
             is_expired = False 
 
         if poll.is_private:
-            if request.user.hasInvitedToPoll(id):
+            if request.user.has_invited_to_poll(id):
                 propositions = Proposition.objects.filter(poll=poll)
-                return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'is_expired':is_expired, 'already_answered' : request.user.hasAlreadyAnswered(id)})
+                return render(request, 'show_poll.html', {'poll' : poll, 'propositions' : propositions, 'is_expired':is_expired, 'already_answered' : request.user.has_already_answered(id)})
             else :
                 raise Http404
         else : 
             propositions = Proposition.objects.filter(poll=poll)
-            return render(request, 'showPoll.html', {'poll' : poll, 'propositions' : propositions, 'is_expired':is_expired, 'already_answered' : request.user.hasAlreadyAnswered(id)})
+            return render(request, 'show_poll.html', {'poll' : poll, 'propositions' : propositions, 'is_expired':is_expired, 'already_answered' : request.user.has_already_answered(id)})
             
     except Poll.DoesNotExist:
         raise Http404
 
 @require_http_methods("GET")
 @login_required(login_url='login')
-def createPollForm(request):
-    return render(request, 'createPoll.html')
+def create_poll_form(request):
+    return render(request, 'create_poll.html')
 
 @require_http_methods("GET")
-def searchUsers(request, name):
+def search_users(request, name):
     users = User.objects.filter(username__contains=name).exclude(is_superuser=True)
     list_users = []
     for user in users:
@@ -56,7 +56,7 @@ def searchUsers(request, name):
     return JsonResponse({'users' : list_users})
 
 @require_http_methods("GET")
-def searchPolls(request, name):
+def search_polls(request, name):
     polls = list(Poll.objects.filter(name__contains=name).filter(is_private=False))
     list_polls = []
     for poll in polls:
@@ -65,9 +65,9 @@ def searchPolls(request, name):
 
 @require_http_methods("POST")
 @login_required(login_url='login')
-def createPoll(request):
+def create_poll(request):
     poll_form = PollFormValidation(request.POST or None)
-
+    
     if poll_form.is_valid() and request.POST.get("proposed_prop", "") != "[]":
         id_users = json.loads(request.POST.get("selected_user", ""))
         propositions = json.loads(request.POST.get("proposed_prop", ""))
@@ -80,15 +80,15 @@ def createPoll(request):
         )
         poll.save()
 
-        poll.createPropositions(propositions)
+        poll.create_propositions(propositions)
         
         id_users.append(request.user.id)
-        if poll.addUsers(request, id_users):
+        if poll.add_users(request, id_users):
             return redirect('poll/' +  str(poll.id))
 
-    return render(request, 'createPoll.html')
+    return render(request, 'create_poll.html')
 
-def addUsersToPoll(id_users, poll):
+def add_users_to_poll(id_users, poll):
     try:
         users = []
         for id in id_users:
@@ -119,7 +119,7 @@ def register(request):
 @login_required(login_url='/accounts/login/')
 def user_profile(request, username):
     user = User.objects.get(username=username)
-    polls_list = user.getInvitedPolls()
+    polls_list = user.get_invited_polls()
 
     page = request.GET.get('page', 1)
 
@@ -135,14 +135,14 @@ def user_profile(request, username):
 
 @require_http_methods("POST")
 @login_required(login_url='login')
-def addUserVote(request):
+def add_user_vote(request):
     if request.method == 'POST':
 
         try:
             proposition = Proposition.objects.get(id=request.POST.get("proposition_id", ""))
             poll_id = proposition.poll.id
 
-            if not request.user.hasAlreadyAnswered(poll_id):
+            if not request.user.has_already_answered(poll_id):
                 PropositionUser(user=request.user, proposition=proposition).save()
                 return redirect('poll', id=poll_id)
             else :

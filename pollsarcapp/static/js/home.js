@@ -4,7 +4,7 @@ let searchPollInput = document.getElementById("search-poll")
 if(searchPollInput){
     let proposedPollsInput = document.getElementById("proposed-polls")
     searchPollInput.addEventListener("input", (e) => {
-        fetch('searchPolls/' + encodeURI(e.data)).then((response) => {
+        fetch('search_polls/' + encodeURI(e.data)).then((response) => {
             proposedPollsInput.innerHTML = ""
             response.json().then((data) => {
                 data.polls.forEach(element => {

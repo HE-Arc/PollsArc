@@ -4,7 +4,7 @@ let searchUserInput = document.getElementById("search-user")
 
 if(searchUserInput){
     searchUserInput.addEventListener("input", (e) => {
-        fetch('searchUsers/' + encodeURI(e.data)).then((response) => {
+        fetch('search_users/' + encodeURI(e.data)).then((response) => {
             response.json().then((data) => {
                 userToDisplay = [];
                 for(let i = 0; i < data.users.length; i++){
