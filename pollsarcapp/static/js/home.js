@@ -1,16 +1,16 @@
 
-let search_poll_input = document.getElementById("search_poll")
+let searchPollInput = document.getElementById("search-poll")
 
-if(search_poll_input){
-    let proposed_polls_input = document.getElementById("proposed_polls")
-    search_poll_input.addEventListener("input", (e) => {
+if(searchPollInput){
+    let proposedPollsInput = document.getElementById("proposed-polls")
+    searchPollInput.addEventListener("input", (e) => {
         fetch('searchPolls/' + encodeURI(e.data)).then((response) => {
-            proposed_polls_input.innerHTML = ""
+            proposedPollsInput.innerHTML = ""
             response.json().then((data) => {
                 data.polls.forEach(element => {
                     console.log(element.id);
                     
-                    proposed_polls_input.innerHTML += "<div class='proposed_poll_display'><a href='poll/"+ element.id +"'><strong>Name : "+ element.name +"</strong><br> descrption : "+ element.description +"</a></div>"
+                    proposedPollsInput.innerHTML += "<div class='proposed-poll-display'><a href='poll/"+ element.id +"'><strong>Name : "+ element.name +"</strong><br> descrption : "+ element.description +"</a></div>"
               });
             })
         })
