@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<section class="container h-100 mt-5">
+<section class="container mt-5">
   <div class="row justify-content-lg-center">
     <div class="card col-lg-8">
       <div class="card-body">
@@ -43,6 +43,7 @@
             {% endif %}
           </div>
           <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+          <p>New to PollsArc?  <a href="{% url 'register' %}">Create an account.</a></p>
           <button class="btn btn-primary" value="login" type="submit">Sign in</button>
         </form>
       </div>

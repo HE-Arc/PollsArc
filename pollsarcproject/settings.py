@@ -30,13 +30,6 @@ ALLOWED_HOSTS = [
     '127.0.0.1'
 ]
 
-# Avatars settings
-
-AVATAR_STORAGE_DIR='pollsarcapp/static/avatars'
-
-#AVATAR_CHANGE_TEMPLATE='pollsarcapp/templates/user/add.html'
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -131,11 +124,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATIC_ROOT = 'd:/TEST/static/'
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+MEDIA_ROOT = 'd:/TEST/media/'
+MEDIA_URL = '/media/'
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'
@@ -147,3 +144,7 @@ EMAIL_HOST = 'smtp.mailtrap.io'
 EMAIL_HOST_USER = 'ef58f90fb2147b'
 EMAIL_HOST_PASSWORD = '6483de66df1770'
 EMAIL_PORT = '2525'
+
+# Avatars settings
+AVATAR_STORAGE_DIR = 'avatars/'
+AVATAR_CHANGE_TEMPLATE='user/change.html'

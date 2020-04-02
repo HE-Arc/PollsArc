@@ -115,8 +115,8 @@ def has_already_answered(self, poll_id):
 
 def get_invited_polls(self):
     invited_polls = []
-    for pollUser in PollUser.objects.filter(user=self):
-        invited_polls.append(pollUser.poll)
+    for poll_user in PollUser.objects.filter(user=self):
+        invited_polls.append(poll_user.poll)
 
     return invited_polls
 

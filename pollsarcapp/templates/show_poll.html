@@ -1,57 +1,73 @@
 {% extends "base.html" %}
 {% block content %}
-{% load avatar_tags %}
-<h1>Name : {{ poll.name }}</h1>
-<p>Description : {{ poll.description }}</p>
-<p>Owner : {{ poll.owner }}</p>
-<p>{% avatar user %}</p>
-<p>Expiration date : {{ poll.expiration_date}}
 
-  {% if not is_expired %}
-  <h2>Propositions : </h2>
-  {% if not already_answered %}
-  {% for prop in propositions %}
-  <form method="POST" action="{% url 'add_user_vote' %}">
-    {% csrf_token %}
-    <input type="hidden" name="proposition_id" value="{{ prop.id }}">
-    <!--<input type="hidden" name="poll_id" value>-->
-    <p><strong>{{ prop.label }}</strong>&nbsp;&nbsp;&nbsp;<input type="submit" class="btn btn-success" value="Vote !">
-    </p>
-  </form>
-  {% endfor %}
-  {% else %}
-  <p>You have already answered to the poll ! </p>
-  {% endif %}
-  {% else %}
-  <p>The poll is expired ! </p>
-  {% endif %}
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h1>Poll</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        {% load avatar_tags %}
 
-  <div id="container" style="width: 75%;">
-    <canvas id="pie-chart"></canvas>
+        <h2 id="user-infos">
+          {{ poll.name }}
+          <small class="d-block">{{ poll.description }}</small>
+          <small class="text-muted d-block">Expiration date: {{ poll.expiration_date}}</small>
+          <small class="text-muted d-block">Owner: {{ poll.owner}}</small>
+        </h2>
+
+        {% if not is_expired %}
+        <h2>Propositions</h2>
+        {% if not already_answered %}
+        {% for prop in propositions %}
+        <form method="POST" action="{% url 'add_user_vote' %}">
+          {% csrf_token %}
+          <input type="hidden" name="proposition_id" value="{{ prop.id }}">
+          <!--<input type="hidden" name="poll_id" value>-->
+          <p><strong>{{ prop.label }}</strong>&nbsp;&nbsp;&nbsp;<input type="submit" class="btn btn-success"
+              value="Vote !">
+          </p>
+        </form>
+        {% endfor %}
+        {% else %}
+        <p>You have already answered to the poll ! </p>
+        {% endif %}
+        {% else %}
+        <p>The poll is expired ! </p>
+        {% endif %}
+      </div>
+      <div class="col-md-8">
+        <h2>Results</h2>
+        <hr>
+        <canvas id="pie-chart"></canvas>
+      </div>
+    </div>
   </div>
-  <script>
+</section>
+<script>
 
-    var config = {
-      type: 'pie',
-      data: {
-        datasets: [{
-          data: {{ poll.stats.data | safe }},
-      backgroundColor: [
-        '#696969', '#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3'
-      ],
-      label: 'Population'
-    }],
-      labels: {{ poll.stats.labels | safe }}
-      },
+  var config = {
+    type: 'pie',
+    data: {
+      datasets: [{
+        data: {{ poll.stats.data | safe }},
+        label: 'Population',
+        backgroundColor: ['#4E79A7', '#F28E2B', '#E15759', '#76B7B2', '#59A14F', '#EDC948', '#B07AA1', '#FF9DA7', '#9C755F', '#BAB0AC'],
+      }],
+    labels: {{ poll.stats.labels | safe }}
+    },
     options: {
       responsive: true
     }
-    };
+  };
 
-    window.onload = function () {
-      var ctx = document.getElementById('pie-chart').getContext('2d');
-      window.myPie = new Chart(ctx, config);
-    };
+  window.onload = function () {
+    var ctx = document.getElementById('pie-chart').getContext('2d');
+    window.myPie = new Chart(ctx, config);
+  };
 
-  </script>
-  {% endblock %}
+</script>
+{% endblock %}
