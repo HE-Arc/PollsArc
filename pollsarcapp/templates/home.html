@@ -18,16 +18,21 @@
     </div>
 </section>
 
+{% if latest_polls %}
 <section id="latest-poll" class="py-5">
     <div class="container h-100">
         <h2>Latest poll</h2>
-        {% if latest_polls %}
-        {% for poll in latest_polls %}
-        <p><strong> Poll name : </strong><a href="poll/{{ poll.id }}">{{ poll.name }}</a></p>
-        {% endfor %}
-        {% else %}
-        <p class="font-weight-bold">There is no poll for the moment.</p>
-        {% endif %}
+        <div class="row">
+            {% for poll in latest_polls %}
+            <div class="card col-md-3">
+                <div class="card-body">
+                    <h4 class="card-title text-center"><a href="poll/{{ poll.id }}">{{ poll.name }}</a></h4>
+                    <p>{{ poll.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </section>
+{% endif %}
 {% endblock %}

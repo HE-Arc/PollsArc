@@ -17,7 +17,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import datetime
 
 def home(request):
-    latest_polls = Poll.objects.filter(is_private=False).order_by('created_at').reverse()[:5]
+    latest_polls = Poll.objects.filter(is_private=False).order_by('created_at').reverse()[:4]
     return render(request, 'home.html', {'latest_polls' : latest_polls})
 
 @login_required(login_url='login')
@@ -67,7 +67,7 @@ def search_polls(request, name):
 @login_required(login_url='login')
 def create_poll(request):
     poll_form = PollFormValidation(request.POST or None)
-    
+
     if poll_form.is_valid() and request.POST.get("proposed_prop", "") != "[]":
         id_users = json.loads(request.POST.get("selected_user", ""))
         propositions = json.loads(request.POST.get("proposed_prop", ""))
