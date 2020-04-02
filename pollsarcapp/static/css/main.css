@@ -12,3 +12,11 @@
 .proposed_poll_display:hover{
     background-color: white;
 }
+
+#user-avatar {
+    border: 1px solid #e1e4e8;
+}
+
+#user-infos small {
+    font-size: 55%;
+}
