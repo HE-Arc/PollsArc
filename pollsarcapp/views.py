@@ -140,7 +140,6 @@ def create_poll(request):
 
         poll.create_propositions(propositions)
 
-        #id_users.append(request.user.id)
         if poll.add_users(request, id_users):
             return redirect('poll/' + str(poll.id))
 
