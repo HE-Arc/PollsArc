@@ -1,12 +1,11 @@
+import html
+import sys
+
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib import auth
-import html
 from django.core.mail import send_mass_mail
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
-import sys
-
 
 # Create your models here.
 class Poll(models.Model):
