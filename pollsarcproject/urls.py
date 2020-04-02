@@ -28,7 +28,7 @@ urlpatterns = [
     path('register', views.register, name='register'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('search_polls/<str:name>', views.search_polls),
-    path('profile/<str:username>', views.user_profile, name="profile"),
+    path('accounts/<str:username>', views.user_profile, name="profile"),
     path('avatar/', include('avatar.urls')),
     path('add_user_vote', views.add_user_vote, name='add_user_vote'),
 ]
