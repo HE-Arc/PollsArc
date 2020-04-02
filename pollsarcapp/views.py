@@ -1,20 +1,21 @@
+import json
+import html
+import datetime
+
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 from django.contrib.auth.models import User
-from django.http import JsonResponse
-from .forms import PollFormValidation, RegisterForm
-from .models import Proposition, Poll, PollUser, PropositionUser
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
 from django.views.decorators.http import require_http_methods
-import json
-import html
 from django.core.mail import send_mass_mail
 from django.urls import reverse
-from django.contrib.sites.shortcuts import get_current_site
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-import datetime
+
+from pollsarcapp.forms import PollFormValidation, RegisterForm
+from pollsarcapp.models import Proposition, Poll, PollUser, PropositionUser
 
 
 def home(request):
@@ -139,7 +140,7 @@ def create_poll(request):
 
         poll.create_propositions(propositions)
 
-        id_users.append(request.user.id)
+        #id_users.append(request.user.id)
         if poll.add_users(request, id_users):
             return redirect('poll/' + str(poll.id))
 
