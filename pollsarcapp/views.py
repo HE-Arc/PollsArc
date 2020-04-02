@@ -22,6 +22,19 @@ def home(request):
 
 @login_required(login_url='login')
 def show_poll(request, id):
+    """Display poll from an id, verifify poll expiration date, if poll is private verify user is invited 
+    
+    Arguments:
+        request {Request} -- Django request object
+        id {int} -- id of the poll
+    
+    Raises:
+        Http404: Raised when user is not invited to a private poll
+        Http404: Raised when the poll doesn't exist
+    
+    Returns:
+        Template -- Django poll template
+    """
     try:
         poll = Poll.objects.get(pk=id)
 
@@ -49,6 +62,15 @@ def create_poll_form(request):
 
 @require_http_methods("GET")
 def search_users(request, name):
+    """Search user by username
+    
+    Arguments:
+        request {Request} -- Django request object
+        name {string} -- username to search
+    
+    Returns:
+        JsonResponse -- Return all finded user with the given username in the JSON format
+    """
     users = User.objects.filter(username__contains=name).exclude(is_superuser=True)
     list_users = []
     for user in users:
@@ -57,6 +79,15 @@ def search_users(request, name):
 
 @require_http_methods("GET")
 def search_polls(request, name):
+    """Search poll by name
+    
+    Arguments:
+        request {Request} -- Django request
+        name {string} -- poll to serach
+    
+    Returns:
+        JsonResponse -- Return all finded poll iwth the given poll name in the JSON format
+    """
     polls = list(Poll.objects.filter(name__contains=name).filter(is_private=False))
     list_polls = []
     for poll in polls:
@@ -66,6 +97,14 @@ def search_polls(request, name):
 @require_http_methods("POST")
 @login_required(login_url='login')
 def create_poll(request):
+    """Create a poll from the poll creation form, add all invited user to the poll, and create propositions
+    
+    Arguments:
+        request {Request} -- Django request 
+    
+    Returns:
+        Template -- Poll page template
+    """
     poll_form = PollFormValidation(request.POST or None)
 
     if poll_form.is_valid() and request.POST.get("proposed_prop", "") != "[]":
@@ -100,9 +139,18 @@ def add_users_to_poll(id_users, poll):
         return True
     except User.DoesNotExist:
         return False
-
       
 def register(request):
+    """Validate the register form, save and log the user
+    
+    Arguments:
+        request {Request} -- Django request
+    
+    Returns:
+        redirect -- If the form is valid, redirect to the home page as connected user
+        redirect -- If the form is not valid, redirect to the registration form with errors
+    """
+
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -116,8 +164,18 @@ def register(request):
         form = RegisterForm()
     return render(request, 'registration/register.html', {'form': form})
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='login', redirect_field_name=None)
 def user_profile(request, username):
+    """Create the profile page of the user, and build a paginator for the polls
+
+    Arguments:
+        request {Request} -- Django request
+        username -- parameter from url
+
+    Returns:
+        redirect -- If user connected request his own profile page, return his profile page
+        redirect -- If the requested user profile is not coresponding to the connected user, then the user is redirected to the home page
+    """
     try:
         user = User.objects.get(username=username)
     except User.DoesNotExist:
@@ -135,12 +193,21 @@ def user_profile(request, username):
         polls = paginator.page(1)
     except EmptyPage:
         polls = paginator.page(paginator.num_pages)
-
-    return render(request, 'user/user_profile.html', {"user": user, "created_polls" : polls})
+        return render(request, 'user/user_profile.html', {"user": user, "created_polls" : polls})
+    else:
+       return redirect('home')
 
 @require_http_methods("POST")
 @login_required(login_url='login')
 def add_user_vote(request):
+    """Add a user proposition for a poll
+    
+    Arguments:
+        request {Request} -- Django request
+    
+    Returns:
+        redirect -- If sucess redirect to poll page, otherwise redirect to home page
+    """
     if request.method == 'POST':
 
         try:
