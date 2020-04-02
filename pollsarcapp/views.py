@@ -132,6 +132,16 @@ def createPoll(request):
 
       
 def register(request):
+    """Validate the register form, save and log the user
+    
+    Arguments:
+        request {Request} -- Django request
+    
+    Returns:
+        redirect -- If the form is valid, redirect to the home page as connected user
+        redirect -- If the form is not valid, redirect to the registration form with errors
+    """
+
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -145,22 +155,36 @@ def register(request):
         form = RegisterForm()
     return render(request, 'registration/register.html', {'form': form})
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='login', redirect_field_name=None)
 def user_profile(request, username):
-    user = User.objects.get(username=username)
-    polls_list = user.getInvitedPolls()
+    """Create the profile page of the user, and build a paginator for the polls
+    
+    Arguments:
+        request {Request} -- Django request
+        username -- parameter from url
+    
+    Returns:
+        redirect -- If user connected request his own profile page, return his profile page
+        redirect -- If the requested user profile is not coresponding to the connected user, then the user is redirected to the home page
+    """
 
-    page = request.GET.get('page', 1)
+    if request.user.username == username :
+        user = User.objects.get(username=username)
+        polls_list = user.getInvitedPolls()
 
-    paginator = Paginator(polls_list, 5)
-    try:
-        polls = paginator.page(page)
-    except PageNotAnInteger:
-        polls = paginator.page(1)
-    except EmptyPage:
-        polls = paginator.page(paginator.num_pages)
+        page = request.GET.get('page', 1)
 
-    return render(request, 'user/user_profile.html', {"user": user, "created_polls" : polls})
+        paginator = Paginator(polls_list, 5)
+        try:
+            polls = paginator.page(page)
+        except PageNotAnInteger:
+            polls = paginator.page(1)
+        except EmptyPage:
+            polls = paginator.page(paginator.num_pages)
+
+        return render(request, 'user/user_profile.html', {"user": user, "created_polls" : polls})
+    else:
+       return redirect('home')
 
 @require_http_methods("POST")
 @login_required(login_url='login')
