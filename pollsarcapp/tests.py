@@ -1,15 +1,11 @@
-from django.test import TestCase
-from django.contrib.auth.models import User
-from django.test import Client
-import sys
-from .models import Poll
 from datetime import datetime
 
-# Create your tests here.
+from django.test import TestCase, Client
+from django.contrib.auth.models import User
 
+from pollsarcapp.models import Poll
 
 class SearchTestCase(TestCase):
-    # sys.stderr.write(users['users'][0]['label'])
     def setUp(self):
         self.username = "UnitTestUser"
         user = User.objects.create_user(
