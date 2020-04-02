@@ -6,26 +6,29 @@ from .models import Poll
 from datetime import datetime
 
 # Create your tests here.
+
+
 class SearchTestCase(TestCase):
-    #sys.stderr.write(users['users'][0]['label'])
+    # sys.stderr.write(users['users'][0]['label'])
     def setUp(self):
         self.username = "UnitTestUser"
-        user = User.objects.create_user(self.username, "romain@gmail.com", "test")
+        user = User.objects.create_user(
+            self.username, "romain@gmail.com", "test")
 
         self.poll_name = "UnitTestPoll"
         self.poll_desc = "UnitTestPollDesc"
 
-        Poll.objects.create(name=self.poll_name, 
-        owner=user, 
-        is_private=False,
-        description=self.poll_desc,
-        expiration_date=datetime.now())
+        Poll.objects.create(name=self.poll_name,
+                            owner=user,
+                            is_private=False,
+                            description=self.poll_desc,
+                            expiration_date=datetime.now())
 
         self.client = Client()
 
     def test_users_search(self):
         users = self.client.get(f"/searchUsers/{self.username}").json()
-        
+
         username = users['users'][0]['label']
         self.assertTrue(username, self.username)
 
@@ -38,9 +41,10 @@ class SearchTestCase(TestCase):
         self.assertTrue(poll_name, self.poll_name)
         self.assertTrue(poll_desc, self.poll_desc)
 
+
 class GetPageTestCase(TestCase):
     def setUp(self):
-        
+
         self.client = Client()
         self.code_OK = 200
 
