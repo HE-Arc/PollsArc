@@ -1,14 +1,11 @@
 {% extends "base.html" %}
-
 {% block content %}
-
 <section id="call-to-action" class="py-5">
     <div class="container h-100">
         <div class="h-100 d-flex flex-column justify-content-center align-items-start text-left">
-            <h1 class="display-1">Logged out!</h1>
-            <p class="display-4"><a href="{% url 'login'%}">Click here to login again.</a></p>
+            <h1 class="display-1">Error 404!</h1>
         </div>
     </div>
 </section>
-  
+{% endif %}
 {% endblock %}

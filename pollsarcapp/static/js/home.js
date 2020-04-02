@@ -1,19 +1,17 @@
 
-let search_poll_input = document.getElementById("search_poll")
+let searchPollInput = document.getElementById("search-poll")
 
-if(search_poll_input){
-    let proposed_polls_input = document.getElementById("proposed_polls")
+if (searchPollInput) {
+    let proposedPollsInput = document.getElementById("proposed-polls")
     // Makes a GET query to get polls from the user research
-    search_poll_input.addEventListener("input", (e) => {
-        fetch('searchPolls/' + encodeURI(e.data)).then((response) => {
-            proposed_polls_input.innerHTML = ""
+    searchPollInput.addEventListener("input", (e) => {
+        fetch('search_polls/' + encodeURI(e.data)).then((response) => {
+            proposedPollsInput.innerHTML = ""
             response.json().then((data) => {
                 data.polls.forEach(element => {
-                    console.log(element.id);
-                    
                     //display the poll on the page
-                    proposed_polls_input.innerHTML += "<div class='proposed_poll_display'><a href='poll/"+ element.id +"'><strong>Name : "+ element.name +"</strong><br> descrption : "+ element.description +"</a></div>"
-              });
+                    proposedPollsInput.innerHTML += "<div class='proposed-poll-display'><a href='poll/" + element.id + "'><strong>Name : " + element.name + "</strong><br> descrption : " + element.description + "</a></div>"
+                });
             })
         })
     })
