@@ -118,7 +118,12 @@ def register(request):
 
 @login_required(login_url='/accounts/login/')
 def user_profile(request, username):
-    user = User.objects.get(username=username)
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        raise Http404("User does not extist")
+
+
     polls_list = user.get_invited_polls()
 
     page = request.GET.get('page', 1)
