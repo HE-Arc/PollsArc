@@ -27,18 +27,18 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <ul class="nav navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link active" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
         </li>
         {% if request.user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'create_poll_form' %}">Create a poll</a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'create_poll_form' %}active{% endif %}" href="{% url 'create_poll_form' %}">Create a poll</a>
         </li>
         {% endif %}
       </ul>
       <ul class="nav navbar-nav ml-auto">
         {% if request.user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'profile' request.user %}">{{ request.user }}</a>
+          <a class="nav-link {% if request.resolver_match.route == 'accounts/<str:username>' %}active{% endif %}" href="{% url 'profile' request.user %}">{{ request.user }}</a>
         </li>
         {% else %}
         <li class="nav-item">
