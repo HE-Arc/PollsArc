@@ -82,8 +82,9 @@ class Poll(models.Model):
 
         propositions = Proposition.objects.filter(poll=self)
         for proposition in propositions:
-            labels.append(proposition.label)
-            data.append(proposition.votes_nb())
+            if proposition.votes_nb() != 0:
+                labels.append(proposition.label)
+                data.append(proposition.votes_nb())
 
         return {'labels': labels, 'data': data}
 

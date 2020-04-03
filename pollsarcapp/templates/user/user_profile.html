@@ -30,7 +30,7 @@
 
                 {% for poll in created_polls %}
                 <a href="{% url 'poll' poll.id %}">
-                    <h5>{{poll.name}}</h5>
+                    <h5>{{poll.name}}{% if poll.owner == user %}<span class="ml-2 badge badge-primary">Owner</span>{% else %}<span class="ml-2 badge badge-success">Invited</span>{% endif %}</h5>
                 </a>
                 <p>expired {{ poll.expiration_date }}</p>
                 {% endfor %}
