@@ -1,92 +1,131 @@
-let added_users = []
+let addedUsers = []; //contains the invited user
 
-let search_user_input = document.getElementById("search_user")
+let searchUserInput = document.getElementById("search-user");
 
-if(search_user_input){
-    search_user_input.addEventListener("input", (e) => {
-        fetch('searchUsers/' + encodeURI(e.data)).then((response) => {
+if (searchUserInput) {
+    // Makes a GET query to get users from the user search
+    searchUserInput.addEventListener("input", (e) => {
+        fetch('search_users/' + encodeURI(e.data)).then((response) => {
             response.json().then((data) => {
-                user_to_display = [];
-                for(let i = 0; i < data.users.length; i++){
-                    user_to_display.push(data.users[i].pseudo)
+
+                // This array contains users from the GET research
+                userToDisplay = [];
+                for (let i = 0; i < data.users.length; i++) {
+                    userToDisplay.push(data.users[i].pseudo);
                 }
-    
-                $("#search_user").autocomplete({
+
+                $("#search-user").autocomplete({
                     source: data.users,
-                    select: function(e, ui){
-    
-                        let added_user = ui.item.label
-                            if(!user_already_selected(added_users, added_user)){
-                                added_users.push([ui.item.id, added_user])
-                                
-                                document.getElementById("selected_user_display").innerHTML += "<div class='user' id=user_"+ ui.item.id +">"+ added_user +'<button type="button" class="close" onclick="removeUser(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-        
-                                document.getElementById("selected_user").value = JSON.stringify(added_users.map((v,i) => {return v[0]}))
-                            }                    
+                    select: function (e, ui) {
+
+                        let addedUser = ui.item.label;
+
+                        // if the user isn't already in the invited list, add the user to the invited user array and display on the page
+                        if (!userAlreadySelected(addedUsers, addedUser)) {
+                            addedUsers.push([ui.item.id, addedUser]);
+                            document.getElementById("selected-user-display").innerHTML += "<div class='user' id=user-" + ui.item.id + ">" + addedUser + '<button type="button" class="close" onclick="removeUser(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+                            document.getElementById("selected-user").value = JSON.stringify(addedUsers.map((v, i) => { return v[0]; }));
                         }
-                    })
-                })
-            })
-    })
+                    }
+                });
+            });
+        });
+    });
 }
 
-function user_already_selected(users_array, user){
-    return users_array.map((v,i) => {return v[1]}).includes(user)
-}
+let isPrivateCheckbox = document.getElementById('is-private');
 
-function removeUser(element){
-    let parent = element.parentNode
+// Allow to remove the user search field if the private checkbox isn't checked, othwersiw display the search field
+if (isPrivateCheckbox) {
+    isPrivateCheckbox.addEventListener('change', function (e) {
+        let searchGroup = document.getElementById('search-user-group');
 
-    let index_to_remove = 0;
-    added_users.forEach( (elem, index) =>{
-        if("user_" + elem === parent.id){
-            index_to_remove = index
+        if (isPrivateCheckbox.checked) {
+            searchGroup.style.display = 'block';
+        } else {
+            addedUsers = [];
+            searchGroup.style.display = 'none';
         }
-    })
-    added_users.splice(index_to_remove,1)
-    parent.remove()
+    });
 }
 
-let nb_prop = 0
-let proposed_props = []
-
-let prop_input = document.getElementById("add_proposition_button")
-
-if(prop_input){
-    prop_input.addEventListener("click", (e) => {
-        let prop_input = document.getElementById("add_proposition")
-        let prop = prop_input.value
-    
-        prop_input.value = ""
-        prop_input.focus()
-    
-        nb_prop++
-        proposed_props.push(prop)
-    
-        //document.getElementById("proposed_prop_display").innerHTML += "<span><strong>"+ nb_prop + ")</strong> "+ prop +"</span>"
-        document.getElementById("proposed_prop_display").innerHTML += "<div id='prop_'" + nb_prop + "><strong>"+ nb_prop + ")</strong> "+ prop +'<button type="button" class="close" onclick="removeProp(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-        document.getElementById("proposed_prop").value = JSON.stringify(proposed_props)
-    })
+//Return a boolean tha indicated if the user is already present in the invited user list
+function userAlreadySelected(usersArray, user) {
+    return usersArray.map((v, i) => { return v[1]; }).includes(user);
 }
 
+// remove a user from the page and the array
+function removeUser(element) {
+    let parent = element.parentNode;
 
-
-function removeProp(element){
-    let parent = element.parentNode
-
-    let index_to_remove = 0;
-    proposed_props.forEach( (elem, index) =>{
-        if("prop_" + elem === parent.id){
-            index_to_remove = index
+    let indexToRemove = 0;
+    addedUsers.forEach((elem, index) => {
+        if ("user-" + elem === parent.id) {
+            indexToRemove = index;
         }
-    })
-    proposed_props.splice(index_to_remove,1)
-    parent.remove()
+    });
+    addedUsers.splice(indexToRemove, 1);
+    parent.remove();
 }
 
+let nbProp = 0; // index of the current proposition
+let proposedProps = []; // array that contain the proposition
 
-// Allow to don't send the search field on the server
-$("#poll_form").submit(() => {
-    $("#search_user").prop('disabled', true)
-    return true
-})
+let propButton = document.getElementById("add-proposition-button"); // proposition button
+
+// if the proposition exist, add a proposition
+if (propButton) {
+    propButton.addEventListener("click", (e) => {
+        addProposition();
+    });
+}
+
+// Add a proposition on the page and on the propositon array
+function addProposition() {
+    let propInput = document.getElementById("add-proposition");
+    let prop = propInput.value;
+
+    //if the proposition begin by a number, interupt the function
+    if (prop == "" || prop.match(/^\d/))
+        return;
+
+    propInput.value = "";
+    propInput.focus();
+
+    nbProp++;
+    proposedProps.push(prop);
+
+    document.getElementById("proposed-prop-display").innerHTML += "<div id='" + prop + "'><strong>" + nbProp + ")</strong> " + prop + '<button type="button" class="close" onclick="removeProp(this)" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+    document.getElementById("proposed-prop").value = JSON.stringify(proposedProps);
+}
+
+// Remove a added propositon on the page and from the array
+function removeProp(element) {
+    let parent = element.parentNode;
+
+    var index = proposedProps.indexOf(parent.id);
+    if (index !== -1) proposedProps.splice(index, 1);
+
+    parent.remove();
+}
+
+//Check if minimum a proposition is filled
+$("#poll-form").submit(() => {
+    if (proposed_props.length == 0) {
+        alert("You must enter propositions ! ");
+        return false;
+    } else {
+        // Allow to don't send the search field on the server
+        $("#search-user").prop('disabled', true);
+        return true;
+    }
+    return true;
+});
+
+// Prevent from sending the form from the addProposition field
+$("#add-proposition").keypress(function (event) {
+    if (event.keyCode == 13) {
+        event.preventDefault();
+        addProposition();
+    }
+});

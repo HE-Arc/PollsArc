@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load form_tag %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Profile</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                {% load avatar_tags %}
+                {% avatar user 300 class="img-fluid" id="user-avatar" %}
+
+                <p><a href="{% url 'avatar_change' %}">Change your avatar</a></p>
+                <h2 id="user-infos">
+                    {{ user.username }}
+                    <small class="text-muted d-block">{{ user.email }}</small>
+                </h2>
+            </div>
+            <div class="col-md-8">
+                <h2>Your polls</h2>
+                <hr>
+
+                {% if created_polls|length == 0 %}
+                <h5>You don't have any polls yet :(</h5>
+                {% else %}
+
+                {% for poll in created_polls %}
+                <a href="{% url 'poll' poll.id %}">
+                    <h5>{{poll.name}}{% if poll.owner == user %}<span class="ml-2 badge badge-primary">Owner</span>{% else %}<span class="ml-2 badge badge-success">Invited</span>{% endif %}</h5>
+                </a>
+                <p>expired {{ poll.expiration_date }}</p>
+                {% endfor %}
+
+                {% if created_polls.has_other_pages %}
+                <ul class="pagination">
+                    {% if created_polls.has_previous %}
+                    <li class="page-item"><a class="page-link"
+                            href="?page={{ created_polls.previous_page_number }}">&laquo;
+                            Previous</a></li>
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#"><span>&laquo; Previous</span></a></li>
+                    {% endif %}
+                    {% for i in created_polls.paginator.page_range %}
+                    {% if created_polls.number == i %}
+                    <li class="active page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% else %}
+                    <li class="page-item disabeld"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if created_polls.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ created_polls.next_page_number }}">Next
+                            &raquo;</a></li>
+                    {% else %}
+                    <li class="disabled page-item"><a class="page-link" href="#"><span>Next &raquo;</span></a></li>
+                    {% endif %}
+                </ul>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

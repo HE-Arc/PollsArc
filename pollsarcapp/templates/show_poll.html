@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h1>Poll</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        {% load avatar_tags %}
+
+        <h2 id="user-infos">
+          {{ poll.name }}
+          <small class="d-block">{{ poll.description }}</small>
+          <small class="text-muted d-block">Expiration date: {{ poll.expiration_date}}</small>
+          <small class="text-muted d-block">Owner: {{ poll.owner}}</small>
+          {% avatar user class="img-fluid" id="user-avatar" %}
+        </h2>
+
+        {% if not is_expired %}
+        <h2>Propositions</h2>
+        {% if not already_answered %}
+        {% for prop in propositions %}
+        <form method="POST" action="{% url 'add_user_vote' %}">
+          {% csrf_token %}
+          <input type="hidden" name="proposition_id" value="{{ prop.id }}">
+          <p><strong>{{ prop.label }}</strong>&nbsp;&nbsp;&nbsp;<input type="submit" class="btn btn-success"
+              value="Vote !">
+          </p>
+        </form>
+        {% endfor %}
+        {% else %}
+        <p>You have already answered to the poll ! </p>
+        {% endif %}
+        {% else %}
+        <p>The poll is expired ! </p>
+        {% endif %}
+        {% if user == poll.owner %}
+        <h2>Danger zone</h2>
+        <form method="POST" action="{% url 'delete_poll' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <input type="hidden" name="poll_id" value="{{ poll.id }}">
+            <label class="text-danger"><strong>Delete the poll ?</strong></label>
+            <button class="btn btn-danger form-control" type="submit">Delete</button>
+          </div>
+        </form>
+        {% endif %}
+      </div>
+      <div class="col-md-8">
+        <h2>Results</h2>
+        <hr>
+        {% if poll.stats.data %}
+        <canvas id="pie-chart"></canvas>
+        {% else %}
+        <h3>There is no votes for the moment.</h3>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% if poll.stats.data %}
+<script>
+
+  var config = {
+    type: 'pie',
+    data: {
+      datasets: [{
+        data: {{ poll.stats.data | safe }},
+    label: 'Population',
+    backgroundColor: ['#4E79A7', '#F28E2B', '#E15759', '#76B7B2', '#59A14F', '#EDC948', '#B07AA1', '#FF9DA7', '#9C755F', '#BAB0AC'],
+  }],
+    labels: {{ poll.stats.labels | safe }}
+    },
+  options: {
+    responsive: true
+  }
+  };
+
+  window.onload = function () {
+    var ctx = document.getElementById('pie-chart').getContext('2d');
+    window.myPie = new Chart(ctx, config);
+  };
+
+</script>
+{% endif %}
+{% endblock %}

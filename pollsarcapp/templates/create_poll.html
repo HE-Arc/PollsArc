@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<section id="call-to-action" class="py-5">
+    <div class="container h-100">
+        <h1>Create a poll</h1>
+        <form method="POST" id="poll-form" action="create_poll" autocomplete="off">
+            {% csrf_token %}
+            <div class="form-check form-check-inline">
+                <input name="is_private" type="checkbox" id="is-private" class="form-check-input" />
+                <label for="is-private" class="form-check-label">Private poll</label>
+            </div>
+            <br>
+            <div class="form-group" id="search-user-group" style="display:none">
+                <label for="search-user">Invite user in the poll</label>
+                <input type="search" class="form-control" name="search_user" placeholder="Type user name here ! "
+                    id="search-user">
+            </div>
+            <input type="hidden" id="selected-user" name="selected_user" value="[]">
+            <div id="selected-user-display" class="pb-3"></div>
+            <div class="form-group">
+                <label for="poll-name">Poll's name</label>
+                <input class="form-control" type="text" name="poll_name" id="poll-name" required />
+            </div>
+            <div class="form-group">
+                <label for="poll-description">Poll's description</label>
+                <textarea name="poll_description" class="form-control" id="poll-description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="expiration-date">Expiration date</label>
+                <input type="date" name="expiration_date" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="add-proposition"></label>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="add-proposition" />
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-success" id="add-proposition-button">Add
+                            proposition</button>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="proposed-prop" name="proposed_prop" value="[]">
+            <div id="proposed-prop-display" class="pb-3"></div>
+            <input type="submit" class="btn btn-dark" value="Submit poll">
+        </form>
+    </div>
+</section>
+{% endblock %}

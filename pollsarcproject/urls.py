@@ -14,19 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include, path
+
 from pollsarcapp import views
-from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('createPollForm', views.createPollForm, name='createPollForm'),
-    path('createPoll', views.createPoll),
-    path('poll/<int:id>', views.showPoll, name='poll'),
-    path('searchUsers/<str:name>', views.searchUsers),
+    path('create_poll_form', views.create_poll_form, name='create_poll_form'),
+    path('create_poll', views.create_poll),
+    path('delete_poll', views.delete_poll, name='delete_poll'),
+    path('poll/<int:id>', views.show_poll, name='poll'),
+    path('search_users/<str:name>', views.search_users),
     path('register', views.register, name='register'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('searchPolls/<str:name>', views.searchPolls),
-    path('addUserVote', views.addUserVote, name='addUserVote'),
+    path('search_polls/<str:name>', views.search_polls),
+    path('accounts/<str:username>', views.user_profile, name="profile"),
+    path('avatar/', include('avatar.urls')),
+    path('add_user_vote', views.add_user_vote, name='add_user_vote'),
 ]
