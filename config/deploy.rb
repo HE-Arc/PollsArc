@@ -15,10 +15,10 @@ namespace :python do
     desc 'Create venv'
     task :create_venv do
         on roles([:app, :web]) do |h|
-	    execute "python3.6 -m venv #{venv_path}"
+	        execute "python3.6 -m venv #{venv_path}"
             execute "source #{venv_path}/bin/activate"
-	    execute "#{venv_path}/bin/pip install -r #{release_path}/requirements.txt"
-            execute "python3.6 #{release_path}/manage.py migrate"
+	        execute "#{venv_path}/bin/pip install -r #{release_path}/requirements.txt"
+            execute "#{venv_path}/bin/python3.6 #{release_path}/manage.py migrate"
         end
     end
 end
