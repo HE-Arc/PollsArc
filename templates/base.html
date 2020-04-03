@@ -18,7 +18,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <a class="navbar-brand" href="{% url 'home' %}">PollsArc</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
       aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,10 +42,10 @@
         </li>
         {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'register' %}">Sign up</a>
+          <a class="nav-link btn btn-outline-light text-white my-2 my-sm-0 mr-sm-2" href="{% url 'login' %}">Sign in</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'login' %}">Sign in</a>
+          <a class="nav-link btn bg-success text-white my-2 my-sm-0" href="{% url 'register' %}">Sign up</a>
         </li>
         {% endif %}
       </ul>
@@ -53,17 +53,22 @@
       <form id="logout-form" class="form-inline my-2 my-lg-0" method="POST" action="{% url 'logout' %}">
         {% csrf_token %}
         <input type="hidden">
-        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
+        <button class="btn bg-danger text-white my-2 my-sm-0" type="submit">Logout</button>
       </form>
       {% endif %}
     </div>
   </nav>
-  <div id="main-page" class="container-fluid">
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert m-0 rounded-0 {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+  {% endfor %}
+  {% endif %}
+  <div id="main-page">
     {% block content %}
     {% endblock %}
   </div>
 
-  <footer class="footer bg-dark">
+  <footer class="footer bg-secondary">
     <div class="container">
       <span class="text-white">Copyright &copy; 2020, PollsArc</span>
     </div>

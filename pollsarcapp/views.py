@@ -9,6 +9,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.core.mail import send_mass_mail
 from django.urls import reverse
@@ -144,6 +145,34 @@ def create_poll(request):
             return redirect('poll/' + str(poll.id))
 
     return render(request, 'create_poll.html')
+
+
+@require_http_methods("POST")
+@login_required(login_url='login')
+def delete_poll(request):
+    """
+    Create a poll from the poll creation form, add all invited user to the poll, and create propositions
+
+    Arguments:
+        request {Request} -- Django request 
+
+    Returns:
+        Redirect to the home page
+    """
+    try:
+        poll = Poll.objects.get(id=request.POST.get("poll_id", ""))
+    except Poll.DoesNotExist:
+        poll = None
+    user = request.user
+
+    if poll is not None and user == poll.owner:
+        poll.delete()
+        messages.success(request, 'The poll has been successfully deleted.')
+        return redirect('home')
+    else:
+        messages.error(request, 'You can\'t delete this poll, you hacker!')
+
+    return redirect('home')
 
 
 def add_users_to_poll(id_users, poll):

@@ -23,6 +23,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('create_poll_form', views.create_poll_form, name='create_poll_form'),
     path('create_poll', views.create_poll),
+    path('delete_poll', views.delete_poll, name='delete_poll'),
     path('poll/<int:id>', views.show_poll, name='poll'),
     path('search_users/<str:name>', views.search_users),
     path('register', views.register, name='register'),
