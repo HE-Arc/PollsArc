@@ -19,8 +19,8 @@ namespace :python do
             execute "source #{venv_path}/bin/activate"
             execute "#{venv_path}/bin/pip install -r #{release_path}/requirements.txt"
             execute "#{venv_path}/bin/pip install mysqlclient" #Add mysqlclient
-            execute "#{venv_path}/bin/python3.6 #{release_path}/manage.py migrate"
-            execute "#{venv_path}/bin/python3.6 #{release_path}/manage.py collectstatic"
+            execute "#{venv_path}/bin/python3.6 #{release_path}/manage.py migrate --settings=pollsarcproject.settings.production"
+            execute "#{venv_path}/bin/python3.6 #{release_path}/manage.py collectstatic --settings=pollsarcproject.settings.production"
         end
     end
 end
