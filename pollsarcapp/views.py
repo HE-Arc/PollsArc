@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.cache import never_cache
 from django.core.mail import send_mass_mail
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -214,7 +215,7 @@ def register(request):
         form = RegisterForm()
     return render(request, 'registration/register.html', {'form': form})
 
-
+@never_cache
 @login_required(login_url='login', redirect_field_name=None)
 def user_profile(request, username):
     """
