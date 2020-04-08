@@ -18,3 +18,8 @@ DATABASES = {
         }
     }
 }
+
+MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
+AVATAR_STORAGE_DIR = 'avatars/'
+AVATAR_CACHE_ENABLED = False
