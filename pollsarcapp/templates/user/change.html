@@ -2,20 +2,33 @@
 {% load i18n avatar_tags %}
 
 {% block content %}
-    <p>{% trans "Your current avatar: " %}</p>
-    {% avatar user %}
-    {% if not avatars %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Change your avatar</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12"></div>
+            <p>{% trans "Your current avatar: " %}</p>
+            {% avatar user %}
+        </div>
+        {% if not avatars %}
         <p>{% trans "You haven't uploaded an avatar yet. Please upload one now." %}</p>
-    {% else %}
+        {% else %}
         <form method="POST" action="{% url 'avatar_change' %}">
             <ul>
                 {{ primary_avatar_form.as_ul }}
             </ul>
-            <p>{% csrf_token %}<input type="submit" value="{% trans "Choose new Default" %}" /></p>
+            <p>{% csrf_token %}<input class="btn btn-primary" type="submit" value="{% trans "Choose new Default" %}" /></p>
         </form>
-    {% endif %}
-    <form enctype="multipart/form-data" method="POST" action="{% url 'avatar_add' %}">
-        {{ upload_avatar_form.as_p }}
-        <p>{% csrf_token %}<input type="submit" value="{% trans "Upload New Image" %}" /></p>
-    </form>
+        {% endif %}
+        <form enctype="multipart/form-data" method="POST" action="{% url 'avatar_add' %}">
+            {{ upload_avatar_form.as_p }}
+            <p>{% csrf_token %}<input class="btn btn-primary" type="submit" value="{% trans "Upload New Image" %}" /></p>
+        </form>
+    </div>
+    </div>
+</section>
 {% endblock %}
