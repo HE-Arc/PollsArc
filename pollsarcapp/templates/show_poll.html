@@ -15,9 +15,9 @@
         <h2 id="user-infos">
           {{ poll.name }}
           <small class="d-block">{{ poll.description }}</small>
-          <small class="text-muted d-block">Expiration date: {{ poll.expiration_date}}</small>
+          <small class="text-muted d-block">Expiration date: {{ poll.expiration_date }}</small>
           <small class="text-muted d-block">Owner: {{ poll.owner}}</small>
-          {% avatar user class="img-fluid" id="user-avatar" %}
+          {% avatar poll.owner class="img-fluid" id="user-avatar" %}
         </h2>
 
         {% if not is_expired %}
